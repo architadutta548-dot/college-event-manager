@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>College Event Manager</title>
 
     <link rel="stylesheet" href="style.css">
@@ -11,508 +12,634 @@
 
 <body>
 
-<header>
+    <!-- ================= HEADER ================= -->
 
-    <h1>College Event Manager</h1>
+    <header>
 
-    <nav>
+        <h1>🎓 College Event Manager</h1>
 
-        <a href="#">Home</a>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#events">Events</a>
+            <a href="#registrations">Registrations</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
 
-        <a href="#events">
-            Events
-        </a>
-
-        <a href="#registrations">
-            Registrations
-        </a>
-
-        <a href="#about">
-            About
-        </a>
-
-        <a href="#contact">
-            Contact
-        </a>
-
-    </nav>
-
-</header>
+    </header>
 
 
-<!-- HERO SECTION -->
+    <!-- ================= HERO ================= -->
 
-<section class="hero">
+    <section class="hero" id="home">
 
-    <h2>
-        Discover College Events
-    </h2>
+        <h2>Discover College Events</h2>
 
-    <p>
-        Find upcoming events, workshops, competitions
-        and activities happening in your college.
-    </p>
+        <p>
+            Explore exciting college events, register easily,
+            and stay connected with campus activities.
+        </p>
 
-    <button id="exploreButton">
-        Explore Events
-    </button>
+        <button id="exploreButton">
+            Explore Events
+        </button>
 
-</section>
+    </section>
 
 
-<!-- EVENTS SECTION -->
+    <!-- ================= EVENTS ================= -->
 
-<section class="events" id="events">
+    <section class="events" id="events">
 
-    <h2>
-        Upcoming Events
-    </h2>
+        <h2>Upcoming Events</h2>
 
+        <!-- Search -->
 
-    <!-- SEARCH -->
+        <div class="search-box">
 
-    <div class="search-box">
-
-        <input
-            type="text"
-            id="eventSearch"
-            placeholder="🔎 Search events..."
-        >
-
-    </div>
-
-
-    <!-- ADD EVENT BUTTON -->
-
-    <button
-        class="add-event-button"
-        onclick="openEventForm()">
-
-        ➕ Add New Event
-
-    </button>
-
-
-    <!-- EVENT CARDS -->
-
-    <div
-        class="event-container"
-        id="eventContainer">
-
-
-        <!-- TECH FEST -->
-
-        <div class="event-card">
-
-            <div class="event-icon">
-                💻
-            </div>
-
-            <span class="event-status open">
-                🟢 Registration Open
-            </span>
-
-            <h3>
-                Tech Fest 2026
-            </h3>
-
-            <p>
-                📅 10 October 2026
-            </p>
-
-            <p>
-                📍 College Auditorium
-            </p>
-
-            <p>
-                Join coding competitions, technology exhibitions and workshops.
-            </p>
-
-            <button
-                class="details-button"
-                onclick="showDetails(
-                    'Tech Fest 2026',
-                    '10 October 2026',
-                    'College Auditorium'
-                )">
-
-                View Details
-
-            </button>
+            <input
+                type="text"
+                id="eventSearch"
+                placeholder="🔍 Search events..."
+            >
 
         </div>
 
 
-        <!-- CULTURAL FEST -->
+        <!-- Add Event -->
 
-        <div class="event-card">
+        <button
+            class="add-event-button"
+            onclick="openEventForm()">
 
-            <div class="event-icon">
-                🎭
+            ➕ Add New Event
+
+        </button>
+
+
+        <!-- Event Cards -->
+
+        <div
+            class="event-container"
+            id="eventContainer">
+
+
+            <!-- TECH FEST -->
+
+            <div class="event-card">
+
+                <div class="event-icon">
+                    💻
+                </div>
+
+                <span class="event-status open">
+                    🟢 Registration Open
+                </span>
+
+                <h3>
+                    Tech Fest 2026
+                </h3>
+
+                <p>
+                    📅 10 October 2026
+                </p>
+
+                <p>
+                    📍 College Auditorium
+                </p>
+
+                <p>
+                    A celebration of technology,
+                    innovation and creativity.
+                </p>
+
+
+                <div class="event-actions">
+
+                    <button
+                        class="details-button"
+                        onclick="showEventDetails(
+                            'Tech Fest 2026',
+                            '10 October 2026',
+                            'College Auditorium',
+                            'A celebration of technology, innovation and creativity.',
+                            'Coding competitions, project exhibitions, quizzes and technical presentations.',
+                            'All college students interested in technology and innovation.',
+                            'Registration Open'
+                        )">
+
+                        View Details
+
+                    </button>
+
+
+                    <button
+                        class="register-button"
+                        onclick="openRegistration(
+                            'Tech Fest 2026',
+                            '10 October 2026',
+                            'College Auditorium'
+                        )">
+
+                        Register Now
+
+                    </button>
+
+                </div>
+
             </div>
 
-            <span class="event-status limited">
-                🟡 Limited Seats
-            </span>
 
-            <h3>
-                Cultural Fest
-            </h3>
+            <!-- CULTURAL FEST -->
 
-            <p>
-                📅 18 October 2026
-            </p>
+            <div class="event-card">
 
-            <p>
-                📍 College Ground
-            </p>
+                <div class="event-icon">
+                    🎭
+                </div>
 
-            <p>
-                Enjoy music, dance, drama and cultural performances.
-            </p>
+                <span class="event-status limited">
+                    🟡 Limited Seats
+                </span>
 
-            <button
-                class="details-button"
-                onclick="showDetails(
-                    'Cultural Fest',
-                    '18 October 2026',
-                    'College Ground'
-                )">
+                <h3>
+                    Cultural Fest
+                </h3>
 
-                View Details
+                <p>
+                    📅 18 October 2026
+                </p>
 
-            </button>
+                <p>
+                    📍 College Ground
+                </p>
+
+                <p>
+                    Celebrate talent, culture,
+                    music and creativity.
+                </p>
+
+
+                <div class="event-actions">
+
+                    <button
+                        class="details-button"
+                        onclick="showEventDetails(
+                            'Cultural Fest',
+                            '18 October 2026',
+                            'College Ground',
+                            'Celebrate talent, culture, music and creativity with students from across the college.',
+                            'Dance performances, singing, drama, art exhibitions and cultural competitions.',
+                            'All college students interested in cultural activities.',
+                            'Limited Seats'
+                        )">
+
+                        View Details
+
+                    </button>
+
+
+                    <button
+                        class="register-button"
+                        onclick="openRegistration(
+                            'Cultural Fest',
+                            '18 October 2026',
+                            'College Ground'
+                        )">
+
+                        Register Now
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- SPORTS DAY -->
+
+            <div class="event-card">
+
+                <div class="event-icon">
+                    🏆
+                </div>
+
+                <span class="event-status closed">
+                    🔴 Registration Closed
+                </span>
+
+                <h3>
+                    Sports Day
+                </h3>
+
+                <p>
+                    📅 25 October 2026
+                </p>
+
+                <p>
+                    📍 Sports Ground
+                </p>
+
+                <p>
+                    A day filled with exciting
+                    sports and team activities.
+                </p>
+
+
+                <div class="event-actions">
+
+                    <button
+                        class="details-button"
+                        onclick="showEventDetails(
+                            'Sports Day',
+                            '25 October 2026',
+                            'Sports Ground',
+                            'A day filled with exciting sports, competitions and team activities.',
+                            'Cricket, football, relay races, athletics and indoor games.',
+                            'College students participating in the scheduled sports activities.',
+                            'Registration Closed'
+                        )">
+
+                        View Details
+
+                    </button>
+
+
+                    <button
+                        class="register-button"
+                        disabled>
+
+                        Registration Closed
+
+                    </button>
+
+                </div>
+
+            </div>
 
         </div>
 
+    </section>
 
-        <!-- SPORTS DAY -->
 
-        <div class="event-card">
+    <!-- ================= REGISTRATIONS ================= -->
 
-            <div class="event-icon">
-                🏆
-            </div>
+    <section
+        class="registrations"
+        id="registrations">
 
-            <span class="event-status closed">
-                🔴 Registration Closed
-            </span>
-
-            <h3>
-                Sports Day
-            </h3>
-
-            <p>
-                📅 25 October 2026
-            </p>
-
-            <p>
-                📍 Sports Ground
-            </p>
-
-            <p>
-                Participate in exciting sports competitions and activities.
-            </p>
-
-            <button
-                class="details-button"
-                onclick="showDetails(
-                    'Sports Day',
-                    '25 October 2026',
-                    'Sports Ground'
-                )">
-
-                View Details
-
-            </button>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- REGISTRATIONS SECTION -->
-
-<section
-    class="registrations"
-    id="registrations">
-
-    <h2>
-        📋 Registered Students
-    </h2>
-
-    <p class="registration-count">
-
-        Total Registrations:
-
-        <strong id="registrationCount">
-            0
-        </strong>
-
-    </p>
-
-
-    <div class="registration-table-container">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>
-                        Student Name
-                    </th>
-
-                    <th>
-                        Email
-                    </th>
-
-                    <th>
-                        Course
-                    </th>
-
-                    <th>
-                        Event
-                    </th>
-
-                    <th>
-                        Action
-                    </th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="registrationTable">
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</section>
-
-
-<!-- ABOUT SECTION -->
-
-<section
-    class="about"
-    id="about">
-
-    <h2>
-        About College Event Manager
-    </h2>
-
-    <p>
-        College Event Manager helps students discover
-        and participate in college events.
-    </p>
-
-</section>
-
-
-<!-- CONTACT SECTION -->
-
-<section
-    class="contact"
-    id="contact">
-
-    <h2>
-        Contact Us
-    </h2>
-
-    <p>
-        📧 collegeevents@example.com
-    </p>
-
-    <p>
-        📞 +91 98765 43210
-    </p>
-
-</section>
-
-
-<!-- FOOTER -->
-
-<footer>
-
-    <p>
-        © 2026 College Event Manager
-    </p>
-
-</footer>
-
-
-<!-- REGISTRATION POPUP -->
-
-<div
-    id="registrationModal"
-    class="modal">
-
-    <div class="modal-content">
-
-        <span
-            class="close-button"
-            onclick="closeRegistration()">
-
-            &times;
-
-        </span>
-
-
-        <h2 id="formTitle">
-            Event Registration
+        <h2>
+            Registered Students
         </h2>
 
-        <p id="selectedEvent">
+        <p class="registration-count">
+
+            Total Registrations:
+            <span id="registrationCount">0</span>
 
         </p>
 
 
-        <form id="registrationForm">
+        <div class="registration-table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student Name
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Course
+                        </th>
+
+                        <th>
+                            Event
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
 
 
-            <label>
-                Full Name
-            </label>
+                <tbody id="registrationTable">
 
-            <input
-                type="text"
-                id="studentName"
-                placeholder="Enter your name"
-                required
-            >
+                </tbody>
 
+            </table>
 
-            <label>
-                Email
-            </label>
+        </div>
 
-            <input
-                type="email"
-                id="studentEmail"
-                placeholder="Enter your email"
-                required
-            >
+    </section>
 
 
-            <label>
-                Course
-            </label>
+    <!-- ================= ABOUT ================= -->
 
-            <input
-                type="text"
-                id="studentCourse"
-                placeholder="Example: B.Tech IT"
-                required
-            >
-
-
-            <button
-                type="submit"
-                id="formButton">
-
-                Register Now
-
-            </button>
-
-        </form>
-
-    </div>
-
-</div>
-
-
-<!-- ADD EVENT POPUP -->
-
-<div
-    id="eventModal"
-    class="modal">
-
-    <div class="modal-content">
-
-        <span
-            class="close-button"
-            onclick="closeEventForm()">
-
-            &times;
-
-        </span>
-
+    <section
+        class="about"
+        id="about">
 
         <h2>
-            ➕ Add New Event
+            About College Event Manager
         </h2>
 
+        <p>
+            College Event Manager is a simple platform
+            that helps students discover upcoming college
+            events and register for them easily.
+        </p>
 
-        <form id="eventForm">
-
-
-            <label>
-                Event Name
-            </label>
-
-            <input
-                type="text"
-                id="eventName"
-                placeholder="Example: Coding Competition"
-                required
-            >
+    </section>
 
 
-            <label>
-                Date
-            </label>
+    <!-- ================= CONTACT ================= -->
 
-            <input
-                type="date"
-                id="eventDate"
-                required
-            >
+    <section
+        class="contact"
+        id="contact">
 
+        <h2>
+            Contact
+        </h2>
 
-            <label>
-                Location
-            </label>
+        <p>
+            📧 collegeevents@example.com
+        </p>
 
-            <input
-                type="text"
-                id="eventLocation"
-                placeholder="Example: Seminar Hall"
-                required
-            >
+        <p>
+            📞 +91 98765 43210
+        </p>
+
+    </section>
 
 
-            <label>
-                Description
-            </label>
+    <!-- ================= FOOTER ================= -->
 
-            <input
-                type="text"
-                id="eventDescription"
-                placeholder="Enter event description"
-                required
-            >
+    <footer>
+
+        <p>
+            © 2026 College Event Manager
+        </p>
+
+    </footer>
 
 
-            <button type="submit">
-                Add Event
-            </button>
+    <!-- ================================================= -->
+    <!-- EVENT DETAILS MODAL -->
+    <!-- ================================================= -->
 
-        </form>
+    <div
+        class="modal"
+        id="eventDetailsModal">
+
+        <div class="modal-content event-details-content">
+
+            <span
+                class="close-button"
+                onclick="closeEventDetails()">
+
+                &times;
+
+            </span>
+
+
+            <h2 id="detailsEventName">
+                Event Details
+            </h2>
+
+
+            <div class="event-detail-box">
+
+                <p>
+                    📅
+                    <strong>Date:</strong>
+                    <span id="detailsEventDate"></span>
+                </p>
+
+                <p>
+                    📍
+                    <strong>Location:</strong>
+                    <span id="detailsEventLocation"></span>
+                </p>
+
+                <p>
+                    📌
+                    <strong>Status:</strong>
+                    <span id="detailsEventStatus"></span>
+                </p>
+
+            </div>
+
+
+            <div class="event-information">
+
+                <h3>
+                    About the Event
+                </h3>
+
+                <p id="detailsEventDescription"></p>
+
+
+                <h3>
+                    Activities
+                </h3>
+
+                <p id="detailsEventActivities"></p>
+
+
+                <h3>
+                    Who Can Participate?
+                </h3>
+
+                <p id="detailsEventParticipants"></p>
+
+            </div>
+
+        </div>
 
     </div>
 
-</div>
+
+    <!-- ================================================= -->
+    <!-- REGISTRATION MODAL -->
+    <!-- ================================================= -->
+
+    <div
+        class="modal"
+        id="registrationModal">
+
+        <div class="modal-content">
+
+            <span
+                class="close-button"
+                onclick="closeRegistration()">
+
+                &times;
+
+            </span>
 
 
-<!-- JAVASCRIPT -->
+            <h2 id="formTitle">
+                Event Registration
+            </h2>
 
-<script src="script.js"></script>
+
+            <div id="selectedEvent">
+
+            </div>
+
+
+            <form id="registrationForm">
+
+                <label for="studentName">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+
+                <label for="studentEmail">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="studentEmail"
+                    placeholder="Enter your email"
+                    required
+                >
+
+
+                <label for="studentCourse">
+                    Course
+                </label>
+
+                <input
+                    type="text"
+                    id="studentCourse"
+                    placeholder="Example: B.Tech IT"
+                    required
+                >
+
+
+                <button
+                    type="submit"
+                    id="formButton">
+
+                    Register Now
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- ADD EVENT MODAL -->
+    <!-- ================================================= -->
+
+    <div
+        class="modal"
+        id="eventModal">
+
+        <div class="modal-content">
+
+            <span
+                class="close-button"
+                onclick="closeEventForm()">
+
+                &times;
+
+            </span>
+
+
+            <h2>
+                Add New Event
+            </h2>
+
+
+            <form id="eventForm">
+
+                <label for="eventName">
+                    Event Name
+                </label>
+
+                <input
+                    type="text"
+                    id="eventName"
+                    placeholder="Enter event name"
+                    required
+                >
+
+
+                <label for="eventDate">
+                    Event Date
+                </label>
+
+                <input
+                    type="date"
+                    id="eventDate"
+                    required
+                >
+
+
+                <label for="eventLocation">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="eventLocation"
+                    placeholder="Enter event location"
+                    required
+                >
+
+
+                <label for="eventDescription">
+                    Description
+                </label>
+
+                <input
+                    type="text"
+                    id="eventDescription"
+                    placeholder="Enter event description"
+                    required
+                >
+
+
+                <button type="submit">
+                    Add Event
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="script.js"></script>
 
 </body>
 
