@@ -1,11 +1,16 @@
 // ====================================
+// COLLEGE EVENT MANAGER
+// ====================================
+
+let currentEvent = "";
+let editIndex = -1;
+
+
+// ====================================
 // EXPLORE EVENTS
 // ====================================
 
-const exploreButton =
-    document.getElementById("exploreButton");
-
-exploreButton.addEventListener("click", function () {
+document.getElementById("exploreButton").addEventListener("click", function () {
 
     document.getElementById("events").scrollIntoView({
         behavior: "smooth"
@@ -15,20 +20,56 @@ exploreButton.addEventListener("click", function () {
 
 
 // ====================================
-// CURRENT EVENT + EDIT MODE
+// EVENT DETAILS
 // ====================================
 
-let currentEvent = "";
-let editIndex = -1;
+function showEventDetails(
+    name,
+    date,
+    location,
+    description,
+    activities,
+    participants,
+    status
+) {
+
+    document.getElementById("detailsEventName").textContent = name;
+
+    document.getElementById("detailsEventDate").textContent = date;
+
+    document.getElementById("detailsEventLocation").textContent = location;
+
+    document.getElementById("detailsEventStatus").textContent = status;
+
+    document.getElementById("detailsEventDescription").textContent =
+        description;
+
+    document.getElementById("detailsEventActivities").textContent =
+        activities;
+
+    document.getElementById("detailsEventParticipants").textContent =
+        participants;
+
+    document.getElementById("eventDetailsModal").style.display = "flex";
+
+}
+
+
+function closeEventDetails() {
+
+    document.getElementById("eventDetailsModal").style.display = "none";
+
+}
 
 
 // ====================================
-// EVENT DETAILS + REGISTRATION
+// REGISTRATION
 // ====================================
 
-function showDetails(name, date, location) {
+function openRegistration(name, date, location) {
 
     currentEvent = name;
+
     editIndex = -1;
 
     document.getElementById("formTitle").textContent =
@@ -43,17 +84,16 @@ function showDetails(name, date, location) {
         "📍 Location: " + location;
 
     document.getElementById("studentName").value = "";
+
     document.getElementById("studentEmail").value = "";
+
     document.getElementById("studentCourse").value = "";
 
     document.getElementById("registrationModal").style.display =
         "flex";
+
 }
 
-
-// ====================================
-// CLOSE REGISTRATION POPUP
-// ====================================
 
 function closeRegistration() {
 
@@ -64,84 +104,132 @@ function closeRegistration() {
 
 
 // ====================================
-// REGISTRATION FORM
+// SAVE REGISTRATION
 // ====================================
 
-const registrationForm =
-    document.getElementById("registrationForm");
+document.getElementById("registrationForm").addEventListener(
+    "submit",
+    function (event) {
 
-registrationForm.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-    event.preventDefault();
+        const name =
+            document.getElementById("studentName").value.trim();
 
-    const name =
-        document.getElementById("studentName").value;
+        const email =
+            document.getElementById("studentEmail").value.trim();
 
-    const email =
-        document.getElementById("studentEmail").value;
-
-    const course =
-        document.getElementById("studentCourse").value;
-
-    let registrations =
-        JSON.parse(localStorage.getItem("registrations")) || [];
+        const course =
+            document.getElementById("studentCourse").value.trim();
 
 
-    // EDIT REGISTRATION
+        let registrations =
+            JSON.parse(localStorage.getItem("registrations")) || [];
 
-    if (editIndex !== -1) {
 
-        registrations[editIndex].name = name;
-        registrations[editIndex].email = email;
-        registrations[editIndex].course = course;
+        // ====================================
+        // CHECK DUPLICATE REGISTRATION
+        // ====================================
 
-        localStorage.setItem(
-            "registrations",
-            JSON.stringify(registrations)
-        );
+        if (editIndex === -1) {
 
-        alert("✅ Registration updated successfully!");
+            const alreadyRegistered =
+                registrations.some(function (registration) {
 
-        editIndex = -1;
+                    return (
+                        registration.email.toLowerCase() ===
+                        email.toLowerCase() &&
+
+                        registration.event.toLowerCase() ===
+                        currentEvent.toLowerCase()
+                    );
+
+                });
+
+
+            if (alreadyRegistered) {
+
+                alert(
+                    "⚠️ You are already registered for this event!\n\n" +
+                    "You cannot register for the same event twice."
+                );
+
+                return;
+            }
+
+        }
+
+
+        // ====================================
+        // EDIT EXISTING REGISTRATION
+        // ====================================
+
+        if (editIndex !== -1) {
+
+            registrations[editIndex].name = name;
+
+            registrations[editIndex].email = email;
+
+            registrations[editIndex].course = course;
+
+            localStorage.setItem(
+                "registrations",
+                JSON.stringify(registrations)
+            );
+
+            alert(
+                "✅ Registration updated successfully!"
+            );
+
+            editIndex = -1;
+
+        }
+
+
+        // ====================================
+        // NEW REGISTRATION
+        // ====================================
+
+        else {
+
+            const registration = {
+
+                name: name,
+
+                email: email,
+
+                course: course,
+
+                event: currentEvent
+
+            };
+
+
+            registrations.push(registration);
+
+
+            localStorage.setItem(
+                "registrations",
+                JSON.stringify(registrations)
+            );
+
+
+            alert(
+                "🎉 Registration Successful!\n\n" +
+                "Thank you, " + name + "!"
+            );
+
+        }
+
+
+        document.getElementById("registrationForm").reset();
+
+        closeRegistration();
+
+        displayRegistrations();
 
     }
-
-
-    // NEW REGISTRATION
-
-    else {
-
-        const registration = {
-
-            name: name,
-            email: email,
-            course: course,
-            event: currentEvent
-
-        };
-
-        registrations.push(registration);
-
-        localStorage.setItem(
-            "registrations",
-            JSON.stringify(registrations)
-        );
-
-        alert(
-            "🎉 Registration Successful!\n\n" +
-            "Thank you, " + name + "!"
-        );
-
-    }
-
-
-    registrationForm.reset();
-
-    closeRegistration();
-
-    displayRegistrations();
-
-});
+);
 
 
 // ====================================
@@ -156,13 +244,14 @@ function displayRegistrations() {
     const count =
         document.getElementById("registrationCount");
 
+
     const registrations =
         JSON.parse(localStorage.getItem("registrations")) || [];
 
+
     table.innerHTML = "";
 
-    count.textContent =
-        registrations.length;
+    count.textContent = registrations.length;
 
 
     registrations.forEach(function (registration, index) {
@@ -173,13 +262,21 @@ function displayRegistrations() {
 
         row.innerHTML = `
 
-            <td>${registration.name}</td>
+            <td>
+                ${registration.name}
+            </td>
 
-            <td>${registration.email}</td>
+            <td>
+                ${registration.email}
+            </td>
 
-            <td>${registration.course}</td>
+            <td>
+                ${registration.course}
+            </td>
 
-            <td>${registration.event}</td>
+            <td>
+                ${registration.event}
+            </td>
 
             <td>
 
@@ -221,36 +318,37 @@ function editRegistration(index) {
     const registrations =
         JSON.parse(localStorage.getItem("registrations")) || [];
 
+
     const registration =
         registrations[index];
 
 
     editIndex = index;
 
-    currentEvent = registration.event;
+    currentEvent =
+        registration.event;
 
 
     document.getElementById("formTitle").textContent =
         "Edit Registration";
+
 
     document.getElementById("formButton").textContent =
         "Update Registration";
 
 
     document.getElementById("selectedEvent").innerHTML =
-
         "✏️ Editing registration for:<br><br>" +
-
-        "<strong>" +
-        registration.event +
-        "</strong>";
+        "<strong>" + registration.event + "</strong>";
 
 
     document.getElementById("studentName").value =
         registration.name;
 
+
     document.getElementById("studentEmail").value =
         registration.email;
+
 
     document.getElementById("studentCourse").value =
         registration.course;
@@ -269,7 +367,6 @@ function editRegistration(index) {
 function deleteRegistration(index) {
 
     const confirmDelete =
-
         confirm(
             "Are you sure you want to delete this registration?"
         );
@@ -301,47 +398,46 @@ function deleteRegistration(index) {
 // EVENT SEARCH
 // ====================================
 
-const eventSearch =
-    document.getElementById("eventSearch");
+document.getElementById("eventSearch").addEventListener(
+    "input",
+    function () {
+
+        const searchText =
+            this.value.toLowerCase();
 
 
-eventSearch.addEventListener("input", function () {
-
-    const searchText =
-        eventSearch.value.toLowerCase();
+        const eventCards =
+            document.querySelectorAll(".event-card");
 
 
-    const eventCards =
-        document.querySelectorAll(".event-card");
+        eventCards.forEach(function (card) {
+
+            const eventName =
+                card.querySelector("h3")
+                    .textContent
+                    .toLowerCase();
 
 
-    eventCards.forEach(function (card) {
+            if (eventName.includes(searchText)) {
 
-        const eventName =
-            card.querySelector("h3")
-                .textContent
-                .toLowerCase();
+                card.style.display = "block";
 
+            }
 
-        if (eventName.includes(searchText)) {
+            else {
 
-            card.style.display = "block";
+                card.style.display = "none";
 
-        }
+            }
 
-        else {
+        });
 
-            card.style.display = "none";
-
-        }
-
-    });
-
-});
+    }
+);
 
 
 // ====================================
-// OPEN ADD EVENT FORM
+// ADD EVENT FORM
 // ====================================
 
 function openEventForm() {
@@ -352,10 +448,6 @@ function openEventForm() {
 }
 
 
-// ====================================
-// CLOSE ADD EVENT FORM
-// ====================================
-
 function closeEventForm() {
 
     document.getElementById("eventModal").style.display =
@@ -364,93 +456,125 @@ function closeEventForm() {
 }
 
 
-// ====================================
-// ADD NEW EVENT
-// ====================================
+document.getElementById("eventForm").addEventListener(
+    "submit",
+    function (event) {
 
-const eventForm =
-    document.getElementById("eventForm");
-
-
-eventForm.addEventListener("submit", function (event) {
-
-    event.preventDefault();
+        event.preventDefault();
 
 
-    const name =
-        document.getElementById("eventName").value.trim();
+        const name =
+            document.getElementById("eventName")
+                .value
+                .trim();
 
 
-    const date =
-        document.getElementById("eventDate").value;
+        const date =
+            document.getElementById("eventDate")
+                .value;
 
 
-    const location =
-        document.getElementById("eventLocation").value.trim();
+        const location =
+            document.getElementById("eventLocation")
+                .value
+                .trim();
 
 
-    const description =
-        document.getElementById("eventDescription").value.trim();
+        const description =
+            document.getElementById("eventDescription")
+                .value
+                .trim();
 
 
-    let events =
-        JSON.parse(localStorage.getItem("events")) || [];
+        let events =
+            JSON.parse(localStorage.getItem("events")) || [];
 
 
-    // PREVENT DUPLICATE EVENT NAMES
+        const duplicateEvent =
+            events.some(function (existingEvent) {
 
-    const duplicateEvent =
-        events.some(function (existingEvent) {
+                return (
+                    existingEvent.name.toLowerCase() ===
+                    name.toLowerCase()
+                );
 
-            return existingEvent.name.toLowerCase() ===
-                name.toLowerCase();
-
-        });
+            });
 
 
-    if (duplicateEvent) {
+        if (duplicateEvent) {
 
-        alert(
-            "⚠️ An event with this name already exists."
+            alert(
+                "⚠️ An event with this name already exists."
+            );
+
+            return;
+        }
+
+
+        const newEvent = {
+
+            name: name,
+
+            date: date,
+
+            location: location,
+
+            description: description
+
+        };
+
+
+        events.push(newEvent);
+
+
+        localStorage.setItem(
+            "events",
+            JSON.stringify(events)
         );
 
-        return;
+
+        alert(
+            "🎉 New event added successfully!"
+        );
+
+
+        document.getElementById("eventForm").reset();
+
+        closeEventForm();
+
+        displayCustomEvents();
+
+    }
+);
+
+
+// ====================================
+// FORMAT DATE
+// ====================================
+
+function formatEventDate(dateString) {
+
+    const date =
+        new Date(dateString + "T00:00:00");
+
+
+    if (Number.isNaN(date.getTime())) {
+
+        return dateString;
 
     }
 
 
-    const newEvent = {
-
-        name: name,
-
-        date: date,
-
-        location: location,
-
-        description: description
-
-    };
-
-
-    events.push(newEvent);
-
-
-    localStorage.setItem(
-        "events",
-        JSON.stringify(events)
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        }
     );
 
-
-    alert("🎉 New event added successfully!");
-
-
-    eventForm.reset();
-
-    closeEventForm();
-
-    displayCustomEvents();
-
-});
+}
 
 
 // ====================================
@@ -463,10 +587,9 @@ function displayCustomEvents() {
         document.getElementById("eventContainer");
 
 
-    // REMOVE OLD CUSTOM EVENT CARDS
-
     const oldCustomEvents =
         container.querySelectorAll(".custom-event");
+
 
     oldCustomEvents.forEach(function (card) {
 
@@ -489,6 +612,10 @@ function displayCustomEvents() {
             "event-card custom-event";
 
 
+        const formattedDate =
+            formatEventDate(event.date);
+
+
         card.innerHTML = `
 
             <div class="event-icon">
@@ -507,7 +634,7 @@ function displayCustomEvents() {
 
 
             <p>
-                📅 ${event.date}
+                📅 ${formattedDate}
             </p>
 
 
@@ -521,12 +648,18 @@ function displayCustomEvents() {
             </p>
 
 
-            <button
-                class="details-button">
+            <div class="event-actions">
 
-                View Details
+                <button class="details-button">
+                    View Details
+                </button>
 
-            </button>
+
+                <button class="register-button">
+                    Register Now
+                </button>
+
+            </div>
 
         `;
 
@@ -539,10 +672,44 @@ function displayCustomEvents() {
             "click",
             function () {
 
-                showDetails(
+                showEventDetails(
+
                     event.name,
-                    event.date,
+
+                    formattedDate,
+
+                    event.location,
+
+                    event.description,
+
+                    "Activities will be announced by the event organizers.",
+
+                    "College students interested in this event.",
+
+                    "Registration Open"
+
+                );
+
+            }
+        );
+
+
+        const registerButton =
+            card.querySelector(".register-button");
+
+
+        registerButton.addEventListener(
+            "click",
+            function () {
+
+                openRegistration(
+
+                    event.name,
+
+                    formattedDate,
+
                     event.location
+
                 );
 
             }
@@ -557,14 +724,9 @@ function displayCustomEvents() {
 
 
 // ====================================
-// LOAD SAVED REGISTRATIONS
+// INITIAL LOAD
 // ====================================
 
 displayRegistrations();
-
-
-// ====================================
-// LOAD SAVED EVENTS
-// ====================================
 
 displayCustomEvents();
