@@ -168,17 +168,27 @@ nav a:hover::after {
 
 
 /* =========================================
-   EVENTS
+   EVENTS SECTION
 ========================================= */
 
 .events {
-    padding: 80px 50px;
+    padding: 90px 50px;
+
     text-align: center;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f8faff 0%,
+            #eef2ff 100%
+        );
 }
 
 .events h2 {
-    font-size: 36px;
+    font-size: 38px;
+
     color: #172554;
+
     margin-bottom: 30px;
 }
 
@@ -193,11 +203,12 @@ nav a:hover::after {
 
 #eventSearch {
     width: 90%;
-    max-width: 550px;
+    max-width: 560px;
 
-    padding: 15px 20px;
+    padding: 16px 22px;
 
     border: 2px solid #dbeafe;
+
     border-radius: 30px;
 
     font-size: 16px;
@@ -207,7 +218,7 @@ nav a:hover::after {
     outline: none;
 
     box-shadow:
-        0 5px 20px rgba(37, 99, 235, 0.08);
+        0 8px 25px rgba(37, 99, 235, 0.08);
 
     transition: 0.3s;
 }
@@ -216,7 +227,7 @@ nav a:hover::after {
     border-color: #6366f1;
 
     box-shadow:
-        0 5px 25px rgba(99, 102, 241, 0.18);
+        0 8px 30px rgba(99, 102, 241, 0.18);
 }
 
 
@@ -225,28 +236,31 @@ nav a:hover::after {
 ========================================= */
 
 .add-event-button {
-    background: linear-gradient(
-        135deg,
-        #2563eb,
-        #7c3aed
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
 
     color: white;
 
     padding: 15px 30px;
 
     border: none;
+
     border-radius: 12px;
 
     font-size: 16px;
+
     font-weight: bold;
 
     cursor: pointer;
 
-    margin-bottom: 45px;
+    margin-bottom: 50px;
 
     box-shadow:
-        0 8px 20px rgba(37, 99, 235, 0.25);
+        0 10px 25px rgba(37, 99, 235, 0.25);
 
     transition: all 0.3s ease;
 }
@@ -255,7 +269,7 @@ nav a:hover::after {
     transform: translateY(-4px);
 
     box-shadow:
-        0 14px 30px rgba(124, 58, 237, 0.35);
+        0 15px 35px rgba(124, 58, 237, 0.35);
 }
 
 
@@ -267,9 +281,10 @@ nav a:hover::after {
     display: flex;
 
     justify-content: center;
+
     align-items: stretch;
 
-    gap: 30px;
+    gap: 32px;
 
     flex-wrap: wrap;
 
@@ -280,32 +295,36 @@ nav a:hover::after {
 
 
 /* =========================================
-   EVENT CARD
+   PROFESSIONAL EVENT CARD
 ========================================= */
 
 .event-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
 
-    width: 320px;
+    width: 325px;
 
     padding: 30px;
 
-    border-radius: 22px;
+    border-radius: 24px;
 
     text-align: left;
 
-    border: 1px solid #e2e8f0;
+    border: 1px solid rgba(148, 163, 184, 0.25);
 
     box-shadow:
-        0 10px 30px rgba(15, 23, 42, 0.08);
+        0 12px 35px rgba(15, 23, 42, 0.08);
 
     transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
 
     position: relative;
 
     overflow: hidden;
+
+    display: flex;
+
+    flex-direction: column;
 }
 
 .event-card::before {
@@ -317,21 +336,43 @@ nav a:hover::after {
     left: 0;
 
     width: 100%;
-    height: 5px;
+    height: 6px;
 
     background:
         linear-gradient(
             90deg,
             #2563eb,
-            #7c3aed
+            #7c3aed,
+            #a855f7
         );
 }
 
+.event-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 120px;
+    height: 120px;
+
+    right: -60px;
+    top: -60px;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(99, 102, 241, 0.12),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
 .event-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-10px);
 
     box-shadow:
-        0 20px 45px rgba(37, 99, 235, 0.16);
+        0 22px 50px rgba(37, 99, 235, 0.16);
 }
 
 
@@ -340,8 +381,29 @@ nav a:hover::after {
 ========================================= */
 
 .event-icon {
-    font-size: 45px;
-    margin-bottom: 15px;
+    width: 68px;
+    height: 68px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #ede9fe
+        );
+
+    border-radius: 18px;
+
+    font-size: 34px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 8px 20px rgba(99, 102, 241, 0.12);
 }
 
 
@@ -350,32 +412,44 @@ nav a:hover::after {
 ========================================= */
 
 .event-status {
-    display: inline-block;
+    display: inline-flex;
 
-    padding: 6px 12px;
+    align-items: center;
 
-    border-radius: 20px;
+    width: fit-content;
+
+    padding: 7px 13px;
+
+    border-radius: 30px;
 
     font-size: 12px;
 
-    font-weight: bold;
+    font-weight: 700;
 
-    margin-bottom: 15px;
+    margin-bottom: 17px;
+
+    letter-spacing: 0.2px;
 }
 
 .event-status.open {
     background: #dcfce7;
     color: #166534;
+
+    border: 1px solid #bbf7d0;
 }
 
 .event-status.limited {
     background: #fef3c7;
     color: #92400e;
+
+    border: 1px solid #fde68a;
 }
 
 .event-status.closed {
     background: #fee2e2;
     color: #991b1b;
+
+    border: 1px solid #fecaca;
 }
 
 
@@ -388,15 +462,25 @@ nav a:hover::after {
 
     color: #172554;
 
-    margin-bottom: 15px;
+    margin-bottom: 14px;
+
+    line-height: 1.3;
 }
 
 .event-card p {
-    margin: 9px 0;
+    margin: 8px 0;
 
     color: #475569;
 
     font-size: 14px;
+}
+
+.event-card p:last-of-type {
+    min-height: 48px;
+
+    color: #64748b;
+
+    margin-top: 13px;
 }
 
 
@@ -411,11 +495,10 @@ nav a:hover::after {
 
     width: 100%;
 
-    margin-top: 22px;
+    margin-top: auto;
+
+    padding-top: 22px;
 }
-
-
-/* Both buttons EXACTLY equal */
 
 .event-actions button {
     flex: 1;
@@ -428,7 +511,7 @@ nav a:hover::after {
 
     border: none;
 
-    border-radius: 10px;
+    border-radius: 11px;
 
     font-size: 13px;
 
@@ -456,29 +539,31 @@ nav a:hover::after {
 ========================================= */
 
 .details-button {
-    background: linear-gradient(
-        135deg,
-        #2563eb,
-        #3b82f6
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #3b82f6
+        );
 
     color: white;
 
     box-shadow:
-        0 5px 12px rgba(37, 99, 235, 0.20);
+        0 6px 15px rgba(37, 99, 235, 0.20);
 }
 
 .details-button:hover {
-    background: linear-gradient(
-        135deg,
-        #1d4ed8,
-        #2563eb
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #2563eb
+        );
 
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 
     box-shadow:
-        0 8px 18px rgba(37, 99, 235, 0.30);
+        0 10px 22px rgba(37, 99, 235, 0.30);
 }
 
 
@@ -487,34 +572,36 @@ nav a:hover::after {
 ========================================= */
 
 .register-button {
-    background: linear-gradient(
-        135deg,
-        #7c3aed,
-        #a855f7
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #7c3aed,
+            #a855f7
+        );
 
     color: white;
 
     box-shadow:
-        0 5px 12px rgba(124, 58, 237, 0.20);
+        0 6px 15px rgba(124, 58, 237, 0.20);
 }
 
 .register-button:hover {
-    background: linear-gradient(
-        135deg,
-        #6d28d9,
-        #9333ea
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #6d28d9,
+            #9333ea
+        );
 
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 
     box-shadow:
-        0 8px 18px rgba(124, 58, 237, 0.30);
+        0 10px 22px rgba(124, 58, 237, 0.30);
 }
 
 
 /* =========================================
-   CLOSED REGISTRATION BUTTON
+   CLOSED BUTTON
 ========================================= */
 
 .register-button:disabled {
@@ -535,7 +622,7 @@ nav a:hover::after {
 ========================================= */
 
 .registrations {
-    padding: 80px 40px;
+    padding: 85px 40px;
 
     text-align: center;
 
@@ -586,12 +673,12 @@ table {
 
     background: white;
 
-    border-radius: 12px;
+    border-radius: 14px;
 
     overflow: hidden;
 
     box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.08);
+        0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
 th {
@@ -692,7 +779,7 @@ tr:hover {
 .about {
     text-align: center;
 
-    padding: 80px 20px;
+    padding: 85px 20px;
 
     background:
         linear-gradient(
