@@ -33,16 +33,47 @@
 
     <section class="hero" id="home">
 
-        <h2>Discover College Events</h2>
+        <div class="hero-decoration hero-decoration-left">
+            Events
+            <span>Build Better</span>
+            Connections
+        </div>
 
-        <p>
-            Explore exciting college events, register easily,
-            and stay connected with campus activities.
-        </p>
+        <div class="hero-content">
 
-        <button id="exploreButton">
-            Explore Events
-        </button>
+            <h2>Upcoming Events</h2>
+
+            <p>
+                Explore exciting events, showcase your talent,
+                build new connections and make the most of your college life!
+            </p>
+
+            <div class="hero-controls">
+
+                <div class="search-box">
+                    <input
+                        type="text"
+                        id="eventSearch"
+                        placeholder="🔍 Search events..."
+                    >
+                </div>
+
+                <button
+                    class="add-event-button"
+                    onclick="openEventForm()">
+
+                    ➕ Add New Event
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="hero-decoration hero-decoration-right">
+            Your Talent
+            <span>Our Platform</span>
+        </div>
 
     </section>
 
@@ -53,60 +84,68 @@
 
         <h2>Upcoming Events</h2>
 
-        <!-- Search -->
-
-        <div class="search-box">
-
-            <input
-                type="text"
-                id="eventSearch"
-                placeholder="🔍 Search events..."
-            >
-
-        </div>
-
-
-        <!-- Add Event -->
-
-        <button
-            class="add-event-button"
-            onclick="openEventForm()">
-
-            ➕ Add New Event
-
-        </button>
-
-
-        <!-- Event Cards -->
-
         <div
             class="event-container"
             id="eventContainer">
 
 
-            <!-- TECH FEST -->
+            <!-- ================= TECH FEST ================= -->
 
             <div class="event-card">
 
-                <div class="event-icon">
+                <div class="event-poster tech-poster">
+
+                    <span class="poster-college">
+                        ASANSOL ENGINEERING COLLEGE
+                    </span>
+
+                    <div class="poster-symbol">
+                        &lt;/&gt;
+                    </div>
+
+                    <h4>
+                        TECH FEST
+                    </h4>
+
+                    <strong>
+                        2026
+                    </strong>
+
+                    <p>
+                        CODE • CREATE • INNOVATE
+                    </p>
+
+                    <div class="poster-decoration">
+                        💡
+                    </div>
+
+                </div>
+
+
+                <div class="event-icon tech-icon">
                     💻
                 </div>
+
 
                 <span class="event-status open">
                     🟢 Registration Open
                 </span>
 
+
                 <h3>
                     Tech Fest 2026
                 </h3>
+
 
                 <p>
                     📅 10 October 2026
                 </p>
 
+
                 <p>
                     📍 College Auditorium
                 </p>
+
 
                 <p>
                     A celebration of technology,
@@ -128,7 +167,7 @@
                             'Registration Open'
                         )">
 
-                        View Details
+                        👁 View Details
 
                     </button>
 
@@ -141,7 +180,7 @@
                             'College Auditorium'
                         )">
 
-                        Register Now
+                        👤 Register Now
 
                     </button>
 
@@ -150,29 +189,63 @@
             </div>
 
 
-            <!-- CULTURAL FEST -->
+            <!-- ================= CULTURAL FEST ================= -->
 
             <div class="event-card">
 
-                <div class="event-icon">
+                <div class="event-poster cultural-poster">
+
+                    <span class="poster-college">
+                        ASANSOL ENGINEERING COLLEGE
+                    </span>
+
+                    <div class="poster-symbol">
+                        ♪
+                    </div>
+
+                    <h4>
+                        CULTURAL
+                    </h4>
+
+                    <strong>
+                        FEST 2026
+                    </strong>
+
+                    <p>
+                        EXPRESS • PERFORM • CELEBRATE
+                    </p>
+
+                    <div class="poster-decoration">
+                        🎭
+                    </div>
+
+                </div>
+
+
+                <div class="event-icon cultural-icon">
                     🎭
                 </div>
+
 
                 <span class="event-status limited">
                     🟡 Limited Seats
                 </span>
 
+
                 <h3>
                     Cultural Fest
                 </h3>
+
 
                 <p>
                     📅 18 October 2026
                 </p>
 
+
                 <p>
                     📍 College Ground
                 </p>
+
 
                 <p>
                     Celebrate talent, culture,
@@ -194,7 +267,7 @@
                             'Limited Seats'
                         )">
 
-                        View Details
+                        👁 View Details
 
                     </button>
 
@@ -207,7 +280,7 @@
                             'College Ground'
                         )">
 
-                        Register Now
+                        👤 Register Now
 
                     </button>
 
@@ -216,29 +289,63 @@
             </div>
 
 
-            <!-- SPORTS DAY -->
+            <!-- ================= SPORTS DAY ================= -->
 
             <div class="event-card">
 
-                <div class="event-icon">
+                <div class="event-poster sports-poster">
+
+                    <span class="poster-college">
+                        ASANSOL ENGINEERING COLLEGE
+                    </span>
+
+                    <div class="poster-symbol">
+                        🏆
+                    </div>
+
+                    <h4>
+                        SPORTS DAY
+                    </h4>
+
+                    <strong>
+                        2026
+                    </strong>
+
+                    <p>
+                        PLAY • COMPETE • WIN
+                    </p>
+
+                    <div class="poster-decoration">
+                        ⚡
+                    </div>
+
+                </div>
+
+
+                <div class="event-icon sports-icon">
                     🏆
                 </div>
+
 
                 <span class="event-status closed">
                     🔴 Registration Closed
                 </span>
 
+
                 <h3>
                     Sports Day
                 </h3>
+
 
                 <p>
                     📅 25 October 2026
                 </p>
 
+
                 <p>
                     📍 Sports Ground
                 </p>
+
 
                 <p>
                     A day filled with exciting
@@ -260,7 +367,7 @@
                             'Registration Closed'
                         )">
 
-                        View Details
+                        👁 View Details
 
                     </button>
 
@@ -269,7 +376,7 @@
                         class="register-button"
                         disabled>
 
-                        Registration Closed
+                        🚫 Registration Closed
 
                     </button>
 
@@ -299,7 +406,6 @@
 
         </p>
 
-
         <div class="registration-table-container">
 
             <table>
@@ -308,30 +414,19 @@
 
                     <tr>
 
-                        <th>
-                            Student Name
-                        </th>
+                        <th>Student Name</th>
 
-                        <th>
-                            Email
-                        </th>
+                        <th>Email</th>
 
-                        <th>
-                            Course
-                        </th>
+                        <th>Course</th>
 
-                        <th>
-                            Event
-                        </th>
+                        <th>Event</th>
 
-                        <th>
-                            Action
-                        </th>
+                        <th>Action</th>
 
                     </tr>
 
                 </thead>
-
 
                 <tbody id="registrationTable">
 
@@ -395,9 +490,7 @@
     </footer>
 
 
-    <!-- ================================================= -->
-    <!-- EVENT DETAILS MODAL -->
-    <!-- ================================================= -->
+    <!-- ================= EVENT DETAILS MODAL ================= -->
 
     <div
         class="modal"
@@ -471,9 +564,7 @@
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- REGISTRATION MODAL -->
-    <!-- ================================================= -->
+    <!-- ================= REGISTRATION MODAL ================= -->
 
     <div
         class="modal"
@@ -553,9 +644,7 @@
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- ADD EVENT MODAL -->
-    <!-- ================================================= -->
+    <!-- ================= ADD EVENT MODAL ================= -->
 
     <div
         class="modal"
