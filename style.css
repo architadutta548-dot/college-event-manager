@@ -36,6 +36,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
+
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -54,7 +55,6 @@ nav a {
     text-decoration: none;
     font-size: 15px;
     font-weight: 600;
-
     position: relative;
     transition: 0.3s;
 }
@@ -65,12 +65,16 @@ nav a:hover {
 
 nav a::after {
     content: "";
+
     position: absolute;
     left: 0;
     bottom: -6px;
+
     width: 0;
     height: 2px;
+
     background: #60a5fa;
+
     transition: 0.3s;
 }
 
@@ -101,11 +105,13 @@ nav a:hover::after {
             rgba(139, 92, 246, 0.45),
             transparent 35%
         ),
+
         radial-gradient(
             circle at bottom left,
             rgba(37, 99, 235, 0.4),
             transparent 35%
         ),
+
         linear-gradient(
             135deg,
             #172554,
@@ -155,12 +161,14 @@ nav a:hover::after {
 
 #exploreButton:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
 
 /* =========================================
-   EVENTS SECTION
+   EVENTS
 ========================================= */
 
 .events {
@@ -198,14 +206,17 @@ nav a:hover::after {
 
     outline: none;
 
-    box-shadow: 0 5px 20px rgba(37, 99, 235, 0.08);
+    box-shadow:
+        0 5px 20px rgba(37, 99, 235, 0.08);
 
     transition: 0.3s;
 }
 
 #eventSearch:focus {
     border-color: #6366f1;
-    box-shadow: 0 5px 25px rgba(99, 102, 241, 0.18);
+
+    box-shadow:
+        0 5px 25px rgba(99, 102, 241, 0.18);
 }
 
 
@@ -254,6 +265,7 @@ nav a:hover::after {
 
 .event-container {
     display: flex;
+
     justify-content: center;
     align-items: stretch;
 
@@ -275,7 +287,6 @@ nav a:hover::after {
     background: white;
 
     width: 320px;
-    min-height: 390px;
 
     padding: 30px;
 
@@ -293,6 +304,7 @@ nav a:hover::after {
         box-shadow 0.3s ease;
 
     position: relative;
+
     overflow: hidden;
 }
 
@@ -307,11 +319,12 @@ nav a:hover::after {
     width: 100%;
     height: 5px;
 
-    background: linear-gradient(
-        90deg,
-        #2563eb,
-        #7c3aed
-    );
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #7c3aed
+        );
 }
 
 .event-card:hover {
@@ -319,31 +332,6 @@ nav a:hover::after {
 
     box-shadow:
         0 20px 45px rgba(37, 99, 235, 0.16);
-}
-
-.event-card::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 5px;
-
-    background: linear-gradient(
-        90deg,
-        #2563eb,
-        #7c3aed
-    );
-}
-
-.event-card:hover {
-    transform: translateY(-10px);
-
-    box-shadow:
-        0 18px 40px rgba(37, 99, 235, 0.15);
 }
 
 
@@ -369,6 +357,7 @@ nav a:hover::after {
     border-radius: 20px;
 
     font-size: 12px;
+
     font-weight: bold;
 
     margin-bottom: 15px;
@@ -396,44 +385,148 @@ nav a:hover::after {
 
 .event-card h3 {
     font-size: 23px;
+
     color: #172554;
+
     margin-bottom: 15px;
 }
 
 .event-card p {
     margin: 9px 0;
+
     color: #475569;
+
     font-size: 14px;
 }
 
 
 /* =========================================
-   DETAILS BUTTON
+   EVENT ACTION BUTTONS
 ========================================= */
 
-.details-button {
-    background: #2563eb;
+.event-actions {
+    display: flex;
 
-    color: white;
+    gap: 10px;
 
-    padding: 11px 20px;
+    width: 100%;
+
+    margin-top: 22px;
+}
+
+
+/* Both buttons EXACTLY equal */
+
+.event-actions button {
+    flex: 1;
+
+    width: 50%;
+
+    height: 46px;
+
+    padding: 0 8px;
 
     border: none;
-    border-radius: 8px;
 
-    margin-top: 15px;
+    border-radius: 10px;
 
-    font-size: 14px;
+    font-size: 13px;
+
     font-weight: bold;
 
     cursor: pointer;
 
-    transition: 0.3s;
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    white-space: nowrap;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+
+/* =========================================
+   VIEW DETAILS
+========================================= */
+
+.details-button {
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+
+    color: white;
+
+    box-shadow:
+        0 5px 12px rgba(37, 99, 235, 0.20);
 }
 
 .details-button:hover {
-    background: #1d4ed8;
+    background: linear-gradient(
+        135deg,
+        #1d4ed8,
+        #2563eb
+    );
+
     transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 18px rgba(37, 99, 235, 0.30);
+}
+
+
+/* =========================================
+   REGISTER NOW
+========================================= */
+
+.register-button {
+    background: linear-gradient(
+        135deg,
+        #7c3aed,
+        #a855f7
+    );
+
+    color: white;
+
+    box-shadow:
+        0 5px 12px rgba(124, 58, 237, 0.20);
+}
+
+.register-button:hover {
+    background: linear-gradient(
+        135deg,
+        #6d28d9,
+        #9333ea
+    );
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 18px rgba(124, 58, 237, 0.30);
+}
+
+
+/* =========================================
+   CLOSED REGISTRATION BUTTON
+========================================= */
+
+.register-button:disabled {
+    background: #94a3b8;
+
+    color: white;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+
+    transform: none;
 }
 
 
@@ -451,18 +544,23 @@ nav a:hover::after {
 
 .registrations h2 {
     font-size: 34px;
+
     color: #172554;
+
     margin-bottom: 12px;
 }
 
 .registration-count {
     font-size: 17px;
+
     color: #64748b;
+
     margin-bottom: 30px;
 }
 
 #registrationCount {
     color: #2563eb;
+
     font-size: 22px;
 }
 
@@ -535,9 +633,11 @@ tr:hover {
     padding: 8px 12px;
 
     border: none;
+
     border-radius: 7px;
 
     font-size: 13px;
+
     font-weight: bold;
 
     cursor: pointer;
@@ -549,6 +649,7 @@ tr:hover {
 
 .edit-button:hover {
     background: #d97706;
+
     transform: translateY(-1px);
 }
 
@@ -565,9 +666,11 @@ tr:hover {
     padding: 8px 12px;
 
     border: none;
+
     border-radius: 7px;
 
     font-size: 13px;
+
     font-weight: bold;
 
     cursor: pointer;
@@ -577,6 +680,7 @@ tr:hover {
 
 .delete-button:hover {
     background: #dc2626;
+
     transform: translateY(-1px);
 }
 
@@ -705,21 +809,88 @@ footer {
     box-shadow:
         0 20px 60px rgba(0, 0, 0, 0.25);
 
-    animation: modalAppear 0.25s ease;
+    animation:
+        modalAppear 0.25s ease;
 }
 
 @keyframes modalAppear {
 
     from {
         opacity: 0;
-        transform: translateY(20px) scale(0.97);
+
+        transform:
+            translateY(20px)
+            scale(0.97);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
-    }
 
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================
+   EVENT DETAILS MODAL
+========================================= */
+
+.event-details-content {
+    max-width: 600px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+}
+
+.event-details-content h2 {
+    text-align: center;
+
+    margin-bottom: 25px;
+
+    color: #172554;
+
+    font-size: 27px;
+}
+
+.event-detail-box {
+    background: #f8fafc;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #e2e8f0;
+}
+
+.event-detail-box p {
+    margin: 8px 0;
+
+    color: #475569;
+}
+
+.event-information {
+    text-align: left;
+}
+
+.event-information h3 {
+    color: #172554;
+
+    margin-top: 18px;
+
+    margin-bottom: 6px;
+
+    font-size: 18px;
+}
+
+.event-information p {
+    color: #475569;
+
+    margin-bottom: 12px;
 }
 
 
@@ -913,6 +1084,16 @@ footer {
         max-width: 360px;
     }
 
+    .event-actions {
+        gap: 8px;
+    }
+
+    .event-actions button {
+        height: 44px;
+
+        font-size: 12px;
+    }
+
     .registrations {
         padding: 60px 15px;
     }
@@ -930,4 +1111,9 @@ footer {
         margin: 4px 0;
     }
 
+    .event-details-content {
+        max-height: 85vh;
+
+        padding: 25px 20px;
+    }
 }
