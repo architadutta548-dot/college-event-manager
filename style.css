@@ -1,0 +1,933 @@
+/* =========================================
+   GLOBAL
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7ff;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+header {
+    background: linear-gradient(135deg, #172554, #312e81);
+    color: white;
+    padding: 20px 60px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+header h1 {
+    font-size: 26px;
+    letter-spacing: 0.5px;
+}
+
+nav {
+    display: flex;
+    gap: 28px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+
+    position: relative;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #93c5fd;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    background: #60a5fa;
+    transition: 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+
+/* =========================================
+   HERO
+========================================= */
+
+.hero {
+    min-height: 480px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 80px 20px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(139, 92, 246, 0.45),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at bottom left,
+            rgba(37, 99, 235, 0.4),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #172554,
+            #312e81,
+            #4c1d95
+        );
+
+    color: white;
+}
+
+.hero h2 {
+    font-size: 52px;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+.hero p {
+    max-width: 700px;
+    font-size: 18px;
+    color: #e0e7ff;
+    margin-bottom: 35px;
+}
+
+
+/* =========================================
+   EXPLORE BUTTON
+========================================= */
+
+#exploreButton {
+    background: white;
+    color: #4338ca;
+
+    padding: 14px 28px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+
+    transition: 0.3s;
+}
+
+#exploreButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+
+/* =========================================
+   EVENTS SECTION
+========================================= */
+
+.events {
+    padding: 80px 50px;
+    text-align: center;
+}
+
+.events h2 {
+    font-size: 36px;
+    color: #172554;
+    margin-bottom: 30px;
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.search-box {
+    margin-bottom: 25px;
+}
+
+#eventSearch {
+    width: 90%;
+    max-width: 550px;
+
+    padding: 15px 20px;
+
+    border: 2px solid #dbeafe;
+    border-radius: 30px;
+
+    font-size: 16px;
+
+    background: white;
+
+    outline: none;
+
+    box-shadow: 0 5px 20px rgba(37, 99, 235, 0.08);
+
+    transition: 0.3s;
+}
+
+#eventSearch:focus {
+    border-color: #6366f1;
+    box-shadow: 0 5px 25px rgba(99, 102, 241, 0.18);
+}
+
+
+/* =========================================
+   ADD EVENT BUTTON
+========================================= */
+
+.add-event-button {
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #7c3aed
+    );
+
+    color: white;
+
+    padding: 15px 30px;
+
+    border: none;
+    border-radius: 12px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin-bottom: 45px;
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.25);
+
+    transition: all 0.3s ease;
+}
+
+.add-event-button:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 14px 30px rgba(124, 58, 237, 0.35);
+}
+
+
+/* =========================================
+   EVENT CONTAINER
+========================================= */
+
+.event-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+
+    gap: 30px;
+
+    flex-wrap: wrap;
+
+    max-width: 1200px;
+
+    margin: auto;
+}
+
+
+/* =========================================
+   EVENT CARD
+========================================= */
+
+.event-card {
+    background: white;
+
+    width: 320px;
+    min-height: 390px;
+
+    padding: 30px;
+
+    border-radius: 22px;
+
+    text-align: left;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.08);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.event-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 5px;
+
+    background: linear-gradient(
+        90deg,
+        #2563eb,
+        #7c3aed
+    );
+}
+
+.event-card:hover {
+    transform: translateY(-8px);
+
+    box-shadow:
+        0 20px 45px rgba(37, 99, 235, 0.16);
+}
+
+.event-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 5px;
+
+    background: linear-gradient(
+        90deg,
+        #2563eb,
+        #7c3aed
+    );
+}
+
+.event-card:hover {
+    transform: translateY(-10px);
+
+    box-shadow:
+        0 18px 40px rgba(37, 99, 235, 0.15);
+}
+
+
+/* =========================================
+   EVENT ICON
+========================================= */
+
+.event-icon {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+
+/* =========================================
+   EVENT STATUS
+========================================= */
+
+.event-status {
+    display: inline-block;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    margin-bottom: 15px;
+}
+
+.event-status.open {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.event-status.limited {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.event-status.closed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
+/* =========================================
+   EVENT TEXT
+========================================= */
+
+.event-card h3 {
+    font-size: 23px;
+    color: #172554;
+    margin-bottom: 15px;
+}
+
+.event-card p {
+    margin: 9px 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+
+/* =========================================
+   DETAILS BUTTON
+========================================= */
+
+.details-button {
+    background: #2563eb;
+
+    color: white;
+
+    padding: 11px 20px;
+
+    border: none;
+    border-radius: 8px;
+
+    margin-top: 15px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.details-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   REGISTRATIONS
+========================================= */
+
+.registrations {
+    padding: 80px 40px;
+
+    text-align: center;
+
+    background: white;
+}
+
+.registrations h2 {
+    font-size: 34px;
+    color: #172554;
+    margin-bottom: 12px;
+}
+
+.registration-count {
+    font-size: 17px;
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+#registrationCount {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+.registration-table-container {
+    width: 100%;
+
+    overflow-x: auto;
+
+    max-width: 1100px;
+
+    margin: auto;
+}
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    background: white;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+th {
+    background: #172554;
+
+    color: white;
+
+    padding: 16px;
+
+    text-align: left;
+
+    font-size: 14px;
+}
+
+td {
+    padding: 15px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    text-align: left;
+
+    font-size: 14px;
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+
+/* =========================================
+   EDIT BUTTON
+========================================= */
+
+.edit-button {
+    background: #f59e0b;
+
+    color: white;
+
+    padding: 8px 12px;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin-right: 5px;
+
+    transition: 0.2s;
+}
+
+.edit-button:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   DELETE BUTTON
+========================================= */
+
+.delete-button {
+    background: #ef4444;
+
+    color: white;
+
+    padding: 8px 12px;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.delete-button:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   ABOUT
+========================================= */
+
+.about {
+    text-align: center;
+
+    padding: 80px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f5f3ff
+        );
+}
+
+.about h2 {
+    font-size: 34px;
+
+    color: #172554;
+
+    margin-bottom: 20px;
+}
+
+.about p {
+    max-width: 650px;
+
+    margin: auto;
+
+    color: #475569;
+
+    font-size: 17px;
+}
+
+
+/* =========================================
+   CONTACT
+========================================= */
+
+.contact {
+    text-align: center;
+
+    padding: 70px 20px;
+
+    background: #e0e7ff;
+}
+
+.contact h2 {
+    font-size: 32px;
+
+    color: #172554;
+
+    margin-bottom: 20px;
+}
+
+.contact p {
+    margin: 8px;
+
+    color: #475569;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+    text-align: center;
+
+    background: #172554;
+
+    color: white;
+
+    padding: 25px;
+}
+
+
+/* =========================================
+   MODAL
+========================================= */
+
+.modal {
+    display: none;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(15, 23, 42, 0.65);
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+
+    padding: 20px;
+}
+
+
+/* =========================================
+   MODAL CONTENT
+========================================= */
+
+.modal-content {
+    background: white;
+
+    width: 90%;
+
+    max-width: 450px;
+
+    padding: 35px;
+
+    border-radius: 20px;
+
+    position: relative;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.25);
+
+    animation: modalAppear 0.25s ease;
+}
+
+@keyframes modalAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =========================================
+   MODAL TITLE
+========================================= */
+
+.modal-content h2 {
+    text-align: center;
+
+    margin-bottom: 25px;
+
+    color: #172554;
+
+    font-size: 25px;
+}
+
+#selectedEvent {
+    text-align: center;
+
+    line-height: 1.6;
+
+    margin-bottom: 20px;
+
+    color: #475569;
+}
+
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+.close-button {
+    position: absolute;
+
+    right: 20px;
+    top: 10px;
+
+    font-size: 30px;
+
+    cursor: pointer;
+
+    color: #64748b;
+
+    transition: 0.2s;
+}
+
+.close-button:hover {
+    color: #ef4444;
+
+    transform: rotate(90deg);
+}
+
+
+/* =========================================
+   FORMS
+========================================= */
+
+#registrationForm,
+#eventForm {
+    display: flex;
+
+    flex-direction: column;
+}
+
+#registrationForm label,
+#eventForm label {
+    margin-top: 10px;
+
+    margin-bottom: 6px;
+
+    font-weight: bold;
+
+    color: #334155;
+
+    font-size: 14px;
+}
+
+#registrationForm input,
+#eventForm input {
+    padding: 13px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+#registrationForm input:focus,
+#eventForm input:focus {
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+
+/* =========================================
+   FORM BUTTONS
+========================================= */
+
+#registrationForm button,
+#eventForm button {
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    color: white;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    margin-top: 22px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+#registrationForm button:hover,
+#eventForm button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+    header {
+        flex-direction: column;
+
+        gap: 15px;
+
+        padding: 20px;
+    }
+
+    nav {
+        gap: 15px;
+
+        flex-wrap: wrap;
+
+        justify-content: center;
+    }
+
+    .hero {
+        min-height: 420px;
+
+        padding: 60px 20px;
+    }
+
+    .hero h2 {
+        font-size: 36px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    .events {
+        padding: 60px 15px;
+    }
+
+    .events h2 {
+        font-size: 30px;
+    }
+
+    .event-card {
+        width: 100%;
+
+        max-width: 360px;
+    }
+
+    .registrations {
+        padding: 60px 15px;
+    }
+
+    table {
+        min-width: 750px;
+    }
+
+    .edit-button,
+    .delete-button {
+        display: block;
+
+        width: 100%;
+
+        margin: 4px 0;
+    }
+
+}
