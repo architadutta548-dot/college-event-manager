@@ -1,300 +1,295 @@
-// ====================================
-// COLLEGE EVENT MANAGER
-// ====================================
-
-let currentEvent = "";
-let editIndex = -1;
+/* =========================================
+   COLLEGE EVENT MANAGER - SCRIPT
+========================================= */
 
 
-// ====================================
-// EXPLORE EVENTS
-// ====================================
+/* =========================================
+   DEFAULT EVENTS
+========================================= */
 
-document.getElementById("exploreButton").addEventListener("click", function () {
+const defaultEvents = [
+    {
+        name: "Tech Fest 2026",
+        date: "10 October 2026",
+        location: "College Auditorium",
+        description:
+            "Explore technology, coding, innovation and exciting technical activities.",
+        status: "Registration Open",
+        activities:
+            "Coding competitions, technical quizzes, project exhibitions and technology challenges.",
+        participants:
+            "All interested college students can participate."
+    },
 
-    document.getElementById("events").scrollIntoView({
-        behavior: "smooth"
-    });
+    {
+        name: "Cultural Fest",
+        date: "18 October 2026",
+        location: "College Ground",
+        description:
+            "Celebrate music, dance, drama, creativity and the cultural spirit of our college.",
+        status: "Limited Seats",
+        activities:
+            "Dance, singing, drama, fashion events and other cultural performances.",
+        participants:
+            "Students interested in cultural activities can participate."
+    },
+
+    {
+        name: "Sports Day",
+        date: "25 October 2026",
+        location: "Sports Ground",
+        description:
+            "Enjoy an exciting day of sports, competitions and teamwork.",
+        status: "Registration Closed",
+        activities:
+            "Running, football, cricket, badminton and other sporting competitions.",
+        participants:
+            "College students who registered for the sports activities."
+    }
+];
+
+
+/* =========================================
+   LOCAL STORAGE
+========================================= */
+
+let registrations =
+    JSON.parse(localStorage.getItem("registrations")) || [];
+
+let customEvents =
+    JSON.parse(localStorage.getItem("customEvents")) || [];
+
+
+/* =========================================
+   PAGE LOAD
+========================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    displayRegistrations();
+
+    renderCustomEvents();
+
+    setupSearch();
+
+    setupRegistrationForm();
+
+    setupAddEventForm();
 
 });
 
 
-// ====================================
-// EVENT DETAILS
-// ====================================
+/* =========================================
+   REGISTRATION MODAL
+========================================= */
 
-function showEventDetails(
-    name,
-    date,
-    location,
-    description,
-    activities,
-    participants,
-    status
-) {
+let selectedEventName = "";
 
-    document.getElementById("detailsEventName").textContent = name;
+function openRegistration(eventName) {
 
-    document.getElementById("detailsEventDate").textContent = date;
+    selectedEventName = eventName;
 
-    document.getElementById("detailsEventLocation").textContent = location;
+    document.getElementById("selectedEvent").textContent =
+        eventName;
 
-    document.getElementById("detailsEventStatus").textContent = status;
+    document.getElementById("registrationModal")
+        .classList.add("active");
+}
 
-    document.getElementById("detailsEventDescription").textContent =
-        description;
 
-    document.getElementById("detailsEventActivities").textContent =
-        activities;
+function closeRegistrationModal() {
 
-    document.getElementById("detailsEventParticipants").textContent =
-        participants;
+    document.getElementById("registrationModal")
+        .classList.remove("active");
 
-    document.getElementById("eventDetailsModal").style.display = "flex";
+    document.getElementById("registrationForm").reset();
+
+    selectedEventName = "";
+}
+
+
+/* =========================================
+   EMAIL VALIDATION
+========================================= */
+
+function isValidEmail(email) {
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    return emailPattern.test(email);
 
 }
 
 
-function closeEventDetails() {
+/* =========================================
+   REGISTRATION FORM
+========================================= */
 
-    document.getElementById("eventDetailsModal").style.display = "none";
+function setupRegistrationForm() {
 
-}
+    const form =
+        document.getElementById("registrationForm");
 
-
-// ====================================
-// REGISTRATION
-// ====================================
-
-function openRegistration(name, date, location) {
-
-    currentEvent = name;
-
-    editIndex = -1;
-
-    document.getElementById("formTitle").textContent =
-        "Event Registration";
-
-    document.getElementById("formButton").textContent =
-        "Register Now";
-
-    document.getElementById("selectedEvent").innerHTML =
-        "🎉 <strong>" + name + "</strong><br><br>" +
-        "📅 Date: " + date + "<br>" +
-        "📍 Location: " + location;
-
-    document.getElementById("studentName").value = "";
-
-    document.getElementById("studentEmail").value = "";
-
-    document.getElementById("studentCourse").value = "";
-
-    document.getElementById("registrationModal").style.display =
-        "flex";
-
-}
-
-
-function closeRegistration() {
-
-    document.getElementById("registrationModal").style.display =
-        "none";
-
-}
-
-
-// ====================================
-// SAVE REGISTRATION
-// ====================================
-
-document.getElementById("registrationForm").addEventListener(
-    "submit",
-    function (event) {
+    form.addEventListener("submit", function (event) {
 
         event.preventDefault();
 
+
         const name =
-            document.getElementById("studentName").value.trim();
+            document.getElementById("studentName")
+                .value.trim();
 
         const email =
-            document.getElementById("studentEmail").value.trim();
+            document.getElementById("studentEmail")
+                .value.trim();
 
         const course =
-            document.getElementById("studentCourse").value.trim();
+            document.getElementById("studentCourse")
+                .value.trim();
 
 
-        let registrations =
-            JSON.parse(localStorage.getItem("registrations")) || [];
+        /* Check empty fields */
+
+        if (!name || !email || !course) {
+
+            alert("Please fill in all fields.");
+
+            return;
+        }
 
 
-        // ====================================
-        // CHECK DUPLICATE REGISTRATION
-        // ====================================
+        /* Check email format */
 
-        if (editIndex === -1) {
+        if (!isValidEmail(email)) {
 
-            const alreadyRegistered =
-                registrations.some(function (registration) {
+            alert(
+                "Please enter a valid email address."
+            );
 
-                    return (
-                        registration.email.toLowerCase() ===
-                        email.toLowerCase() &&
+            document.getElementById("studentEmail").focus();
 
-                        registration.event.toLowerCase() ===
-                        currentEvent.toLowerCase()
-                    );
-
-                });
+            return;
+        }
 
 
-            if (alreadyRegistered) {
+        /* Check duplicate registration */
 
-                alert(
-                    "⚠️ You are already registered for this event!\n\n" +
-                    "You cannot register for the same event twice."
+        const duplicate =
+            registrations.some(function (registration) {
+
+                return (
+                    registration.email.toLowerCase() ===
+                    email.toLowerCase() &&
+                    registration.event === selectedEventName
                 );
 
-                return;
-            }
-
-        }
+            });
 
 
-        // ====================================
-        // EDIT EXISTING REGISTRATION
-        // ====================================
-
-        if (editIndex !== -1) {
-
-            registrations[editIndex].name = name;
-
-            registrations[editIndex].email = email;
-
-            registrations[editIndex].course = course;
-
-            localStorage.setItem(
-                "registrations",
-                JSON.stringify(registrations)
-            );
+        if (duplicate) {
 
             alert(
-                "✅ Registration updated successfully!"
+                "You have already registered for this event with this email."
             );
 
-            editIndex = -1;
-
+            return;
         }
 
 
-        // ====================================
-        // NEW REGISTRATION
-        // ====================================
+        /* Add registration */
 
-        else {
+        registrations.push({
 
-            const registration = {
+            name: name,
 
-                name: name,
+            email: email,
 
-                email: email,
+            course: course,
 
-                course: course,
+            event: selectedEventName
 
-                event: currentEvent
-
-            };
+        });
 
 
-            registrations.push(registration);
+        localStorage.setItem(
+            "registrations",
+            JSON.stringify(registrations)
+        );
 
 
-            localStorage.setItem(
-                "registrations",
-                JSON.stringify(registrations)
-            );
+        alert(
+            "Registration successful for " +
+            selectedEventName +
+            "!"
+        );
 
-
-            alert(
-                "🎉 Registration Successful!\n\n" +
-                "Thank you, " + name + "!"
-            );
-
-        }
-
-
-        document.getElementById("registrationForm").reset();
-
-        closeRegistration();
 
         displayRegistrations();
 
-    }
-);
+        closeRegistrationModal();
+
+    });
+}
 
 
-// ====================================
-// DISPLAY REGISTRATIONS
-// ====================================
+/* =========================================
+   DISPLAY REGISTRATIONS
+========================================= */
 
 function displayRegistrations() {
 
     const table =
         document.getElementById("registrationTable");
 
-    const count =
-        document.getElementById("registrationCount");
-
-
-    const registrations =
-        JSON.parse(localStorage.getItem("registrations")) || [];
+    const noRegistrations =
+        document.getElementById("noRegistrations");
 
 
     table.innerHTML = "";
 
-    count.textContent = registrations.length;
+
+    if (registrations.length === 0) {
+
+        noRegistrations.style.display = "block";
+
+        return;
+
+    }
+
+
+    noRegistrations.style.display = "none";
 
 
     registrations.forEach(function (registration, index) {
 
-        const row =
-            document.createElement("tr");
+        const row = document.createElement("tr");
 
 
         row.innerHTML = `
 
-            <td>
-                ${registration.name}
-            </td>
+            <td>${escapeHTML(registration.name)}</td>
 
-            <td>
-                ${registration.email}
-            </td>
+            <td>${escapeHTML(registration.email)}</td>
 
-            <td>
-                ${registration.course}
-            </td>
+            <td>${escapeHTML(registration.course)}</td>
 
-            <td>
-                ${registration.event}
-            </td>
+            <td>${escapeHTML(registration.event)}</td>
 
             <td>
 
                 <button
-                    class="edit-button"
-                    onclick="editRegistration(${index})">
-
-                    ✏️ Edit
-
+                    class="edit-btn"
+                    onclick="editRegistration(${index})"
+                >
+                    Edit
                 </button>
 
-
                 <button
-                    class="delete-button"
-                    onclick="deleteRegistration(${index})">
-
-                    🗑️ Delete
-
+                    class="delete-btn"
+                    onclick="deleteRegistration(${index})"
+                >
+                    Delete
                 </button>
 
             </td>
@@ -309,122 +304,260 @@ function displayRegistrations() {
 }
 
 
-// ====================================
-// EDIT REGISTRATION
-// ====================================
+/* =========================================
+   EDIT REGISTRATION
+========================================= */
 
 function editRegistration(index) {
 
-    const registrations =
-        JSON.parse(localStorage.getItem("registrations")) || [];
+    const registration = registrations[index];
 
 
-    const registration =
-        registrations[index];
+    const newName = prompt(
+        "Enter student name:",
+        registration.name
+    );
+
+    if (newName === null) {
+        return;
+    }
 
 
-    editIndex = index;
+    const newEmail = prompt(
+        "Enter email:",
+        registration.email
+    );
 
-    currentEvent =
-        registration.event;
-
-
-    document.getElementById("formTitle").textContent =
-        "Edit Registration";
-
-
-    document.getElementById("formButton").textContent =
-        "Update Registration";
+    if (newEmail === null) {
+        return;
+    }
 
 
-    document.getElementById("selectedEvent").innerHTML =
-        "✏️ Editing registration for:<br><br>" +
-        "<strong>" + registration.event + "</strong>";
+    /* Validate edited email */
+
+    if (!isValidEmail(newEmail.trim())) {
+
+        alert(
+            "Please enter a valid email address."
+        );
+
+        return;
+    }
 
 
-    document.getElementById("studentName").value =
-        registration.name;
+    const newCourse = prompt(
+        "Enter course:",
+        registration.course
+    );
+
+    if (newCourse === null) {
+        return;
+    }
 
 
-    document.getElementById("studentEmail").value =
-        registration.email;
+    registrations[index].name =
+        newName.trim();
+
+    registrations[index].email =
+        newEmail.trim();
+
+    registrations[index].course =
+        newCourse.trim();
 
 
-    document.getElementById("studentCourse").value =
-        registration.course;
+    localStorage.setItem(
+        "registrations",
+        JSON.stringify(registrations)
+    );
 
 
-    document.getElementById("registrationModal").style.display =
-        "flex";
+    displayRegistrations();
+
+    alert("Registration updated successfully.");
 
 }
 
 
-// ====================================
-// DELETE REGISTRATION
-// ====================================
+/* =========================================
+   DELETE REGISTRATION
+========================================= */
 
 function deleteRegistration(index) {
 
-    const confirmDelete =
+    const confirmation =
         confirm(
             "Are you sure you want to delete this registration?"
         );
 
 
-    if (confirmDelete) {
-
-        let registrations =
-            JSON.parse(localStorage.getItem("registrations")) || [];
-
-
-        registrations.splice(index, 1);
-
-
-        localStorage.setItem(
-            "registrations",
-            JSON.stringify(registrations)
-        );
-
-
-        displayRegistrations();
-
+    if (!confirmation) {
+        return;
     }
+
+
+    registrations.splice(index, 1);
+
+
+    localStorage.setItem(
+        "registrations",
+        JSON.stringify(registrations)
+    );
+
+
+    displayRegistrations();
 
 }
 
 
-// ====================================
-// EVENT SEARCH
-// ====================================
+/* =========================================
+   EVENT DETAILS
+========================================= */
 
-document.getElementById("eventSearch").addEventListener(
-    "input",
-    function () {
+function showEventDetails(eventName) {
+
+    const event = findEvent(eventName);
+
+
+    if (!event) {
+
+        alert("Event details not found.");
+
+        return;
+    }
+
+
+    document.getElementById("detailsTitle").textContent =
+        event.name;
+
+    document.getElementById("detailsDate").textContent =
+        event.date;
+
+    document.getElementById("detailsLocation").textContent =
+        event.location;
+
+    document.getElementById("detailsStatus").textContent =
+        event.status;
+
+    document.getElementById("detailsDescription").textContent =
+        event.description;
+
+    document.getElementById("detailsActivities").textContent =
+        event.activities;
+
+    document.getElementById("detailsParticipants").textContent =
+        event.participants;
+
+
+    document.getElementById("detailsModal")
+        .classList.add("active");
+
+}
+
+
+function closeDetailsModal() {
+
+    document.getElementById("detailsModal")
+        .classList.remove("active");
+
+}
+
+
+/* =========================================
+   FIND EVENT
+========================================= */
+
+function findEvent(eventName) {
+
+    const defaultEvent =
+        defaultEvents.find(function (event) {
+
+            return event.name === eventName;
+
+        });
+
+
+    if (defaultEvent) {
+        return defaultEvent;
+    }
+
+
+    const customEvent =
+        customEvents.find(function (event) {
+
+            return event.name === eventName;
+
+        });
+
+
+    if (customEvent) {
+
+        return {
+
+            name: customEvent.name,
+
+            date: formatDate(customEvent.date),
+
+            location: customEvent.location,
+
+            description: customEvent.description,
+
+            status: "Registration Open",
+
+            activities:
+                "Activities and details will be announced by the event organizers.",
+
+            participants:
+                "All eligible college students can participate."
+
+        };
+
+    }
+
+
+    return null;
+}
+
+
+/* =========================================
+   SEARCH EVENTS
+========================================= */
+
+function setupSearch() {
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+
+    searchInput.addEventListener("input", function () {
 
         const searchText =
-            this.value.toLowerCase();
+            searchInput.value.toLowerCase().trim();
 
 
-        const eventCards =
+        const cards =
             document.querySelectorAll(".event-card");
 
 
-        eventCards.forEach(function (card) {
+        cards.forEach(function (card) {
+
+            const title =
+                card.querySelector("h3");
+
+
+            if (!title) {
+                return;
+            }
+
 
             const eventName =
-                card.querySelector("h3")
-                    .textContent
-                    .toLowerCase();
+                title.textContent.toLowerCase();
 
 
             if (eventName.includes(searchText)) {
 
-                card.style.display = "block";
+                card.style.display = "";
 
-            }
-
-            else {
+            } else {
 
                 card.style.display = "none";
 
@@ -432,79 +565,95 @@ document.getElementById("eventSearch").addEventListener(
 
         });
 
-    }
-);
-
-
-// ====================================
-// ADD EVENT FORM
-// ====================================
-
-function openEventForm() {
-
-    document.getElementById("eventModal").style.display =
-        "flex";
+    });
 
 }
 
 
-function closeEventForm() {
+/* =========================================
+   ADD EVENT MODAL
+========================================= */
 
-    document.getElementById("eventModal").style.display =
-        "none";
+function openAddEventModal() {
+
+    document.getElementById("addEventModal")
+        .classList.add("active");
 
 }
 
 
-document.getElementById("eventForm").addEventListener(
-    "submit",
-    function (event) {
+function closeAddEventModal() {
+
+    document.getElementById("addEventModal")
+        .classList.remove("active");
+
+    document.getElementById("addEventForm").reset();
+
+}
+
+
+/* =========================================
+   ADD EVENT FORM
+========================================= */
+
+function setupAddEventForm() {
+
+    const form =
+        document.getElementById("addEventForm");
+
+
+    form.addEventListener("submit", function (event) {
 
         event.preventDefault();
 
 
         const name =
-            document.getElementById("eventName")
-                .value
-                .trim();
-
+            document.getElementById("newEventName")
+                .value.trim();
 
         const date =
-            document.getElementById("eventDate")
+            document.getElementById("newEventDate")
                 .value;
 
-
         const location =
-            document.getElementById("eventLocation")
-                .value
-                .trim();
-
+            document.getElementById("newEventLocation")
+                .value.trim();
 
         const description =
-            document.getElementById("eventDescription")
-                .value
-                .trim();
+            document.getElementById("newEventDescription")
+                .value.trim();
 
 
-        let events =
-            JSON.parse(localStorage.getItem("events")) || [];
+        if (!name || !date || !location || !description) {
+
+            alert("Please fill in all fields.");
+
+            return;
+        }
 
 
-        const duplicateEvent =
-            events.some(function (existingEvent) {
+        /* Prevent duplicate event names */
 
-                return (
-                    existingEvent.name.toLowerCase() ===
-                    name.toLowerCase()
-                );
+        const exists =
+            defaultEvents.some(function (event) {
+
+                return event.name.toLowerCase() ===
+                    name.toLowerCase();
+
+            }) ||
+
+            customEvents.some(function (event) {
+
+                return event.name.toLowerCase() ===
+                    name.toLowerCase();
 
             });
 
 
-        if (duplicateEvent) {
+        if (exists) {
 
             alert(
-                "⚠️ An event with this name already exists."
+                "An event with this name already exists."
             );
 
             return;
@@ -524,49 +673,159 @@ document.getElementById("eventForm").addEventListener(
         };
 
 
-        events.push(newEvent);
+        customEvents.push(newEvent);
 
 
         localStorage.setItem(
-            "events",
-            JSON.stringify(events)
+            "customEvents",
+            JSON.stringify(customEvents)
         );
+
+
+        renderCustomEvents();
+
+
+        closeAddEventModal();
 
 
         alert(
-            "🎉 New event added successfully!"
+            "New event added successfully!"
         );
 
+    });
 
-        document.getElementById("eventForm").reset();
+}
 
-        closeEventForm();
 
-        displayCustomEvents();
+/* =========================================
+   RENDER CUSTOM EVENTS
+========================================= */
 
+function renderCustomEvents() {
+
+    const container =
+        document.getElementById("eventContainer");
+
+
+    document
+        .querySelectorAll(".custom-event")
+        .forEach(function (card) {
+
+            card.remove();
+
+        });
+
+
+    customEvents.forEach(function (event) {
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "event-card custom-event";
+
+
+        card.innerHTML = `
+
+            <div class="event-poster">
+
+                <div class="custom-poster-content">
+
+                    <span>📅</span>
+
+                    <strong>
+                        ${escapeHTML(event.name)}
+                    </strong>
+
+                    <small>
+                        COLLEGE EVENT
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="event-icon">
+                📅
+            </div>
+
+
+            <div class="event-content">
+
+                <div class="event-status open">
+                    🟢 Registration Open
+                </div>
+
+
+                <h3>
+                    ${escapeHTML(event.name)}
+                </h3>
+
+
+                <p class="event-info">
+                    📅 ${escapeHTML(formatDate(event.date))}
+                </p>
+
+
+                <p class="event-info">
+                    📍 ${escapeHTML(event.location)}
+                </p>
+
+
+                <p>
+                    ${escapeHTML(event.description)}
+                </p>
+
+
+                <div class="event-actions">
+
+                    <button
+                        class="details-btn"
+                        onclick="showEventDetails('${escapeAttribute(event.name)}')"
+                    >
+                        View Details
+                    </button>
+
+
+                    <button
+                        class="register-btn"
+                        onclick="openRegistration('${escapeAttribute(event.name)}')"
+                    >
+                        Register Now
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================
+   FORMAT DATE
+========================================= */
+
+function formatDate(dateString) {
+
+    if (!dateString) {
+        return "";
     }
-);
 
-
-// ====================================
-// FORMAT DATE
-// ====================================
-
-function formatEventDate(dateString) {
 
     const date =
         new Date(dateString + "T00:00:00");
 
 
-    if (Number.isNaN(date.getTime())) {
-
-        return dateString;
-
-    }
-
-
     return date.toLocaleDateString(
-        "en-IN",
+        "en-GB",
         {
             day: "numeric",
             month: "long",
@@ -577,156 +836,59 @@ function formatEventDate(dateString) {
 }
 
 
-// ====================================
-// DISPLAY CUSTOM EVENTS
-// ====================================
-
-function displayCustomEvents() {
-
-    const container =
-        document.getElementById("eventContainer");
-
-
-    const oldCustomEvents =
-        container.querySelectorAll(".custom-event");
-
-
-    oldCustomEvents.forEach(function (card) {
-
-        card.remove();
-
-    });
-
-
-    const events =
-        JSON.parse(localStorage.getItem("events")) || [];
-
-
-    events.forEach(function (event) {
-
-        const card =
-            document.createElement("div");
-
-
-        card.className =
-            "event-card custom-event";
-
-
-        const formattedDate =
-            formatEventDate(event.date);
-
-
-        card.innerHTML = `
-
-            <div class="event-icon">
-                📅
-            </div>
-
-
-            <span class="event-status open">
-                🟢 Registration Open
-            </span>
-
-
-            <h3>
-                ${event.name}
-            </h3>
-
-
-            <p>
-                📅 ${formattedDate}
-            </p>
-
-
-            <p>
-                📍 ${event.location}
-            </p>
-
-
-            <p>
-                ${event.description}
-            </p>
-
-
-            <div class="event-actions">
-
-                <button class="details-button">
-                    View Details
-                </button>
-
-
-                <button class="register-button">
-                    Register Now
-                </button>
-
-            </div>
-
-        `;
-
-
-        const detailsButton =
-            card.querySelector(".details-button");
-
-
-        detailsButton.addEventListener(
-            "click",
-            function () {
-
-                showEventDetails(
-
-                    event.name,
-
-                    formattedDate,
-
-                    event.location,
-
-                    event.description,
-
-                    "Activities will be announced by the event organizers.",
-
-                    "College students interested in this event.",
-
-                    "Registration Open"
-
-                );
-
-            }
-        );
-
-
-        const registerButton =
-            card.querySelector(".register-button");
-
-
-        registerButton.addEventListener(
-            "click",
-            function () {
-
-                openRegistration(
-
-                    event.name,
-
-                    formattedDate,
-
-                    event.location
-
-                );
-
-            }
-        );
-
-
-        container.appendChild(card);
-
-    });
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
 }
 
 
-// ====================================
-// INITIAL LOAD
-// ====================================
+function escapeAttribute(value) {
 
-displayRegistrations();
+    return String(value)
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'");
 
-displayCustomEvents();
+}
+
+
+/* =========================================
+   CLOSE MODALS OUTSIDE CLICK
+========================================= */
+
+window.addEventListener("click", function (event) {
+
+    const detailsModal =
+        document.getElementById("detailsModal");
+
+    const registrationModal =
+        document.getElementById("registrationModal");
+
+    const addEventModal =
+        document.getElementById("addEventModal");
+
+
+    if (event.target === detailsModal) {
+        closeDetailsModal();
+    }
+
+
+    if (event.target === registrationModal) {
+        closeRegistrationModal();
+    }
+
+
+    if (event.target === addEventModal) {
+        closeAddEventModal();
+    }
+
+});
