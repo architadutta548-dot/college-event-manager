@@ -1,110 +1,665 @@
 /* =========================================
-   COLLEGE EVENT MANAGER - SCRIPT
+   COLLEGE EVENT MANAGER
+   STUDENT WEBSITE
 ========================================= */
+
+const API_URL = "http://localhost:3000";
+
+let databaseEvents = [];
+let selectedEventId = null;
 
 
 /* =========================================
-   DEFAULT EVENTS
+   DOM ELEMENTS
 ========================================= */
 
-const defaultEvents = [
-    {
-        name: "Tech Fest 2026",
-        date: "10 October 2026",
-        location: "College Auditorium",
-        description:
-            "Explore technology, coding, innovation and exciting technical activities.",
-        status: "Registration Open",
-        activities:
-            "Coding competitions, technical quizzes, project exhibitions and technology challenges.",
-        participants:
-            "All interested college students can participate."
-    },
+const eventContainer = document.getElementById("eventContainer");
+const searchInput = document.getElementById("searchInput");
+const noSearchResults = document.getElementById("noSearchResults");
 
-    {
-        name: "Cultural Fest",
-        date: "18 October 2026",
-        location: "College Ground",
-        description:
-            "Celebrate music, dance, drama, creativity and the cultural spirit of our college.",
-        status: "Limited Seats",
-        activities:
-            "Dance, singing, drama, fashion events and other cultural performances.",
-        participants:
-            "Students interested in cultural activities can participate."
-    },
+const detailsModal = document.getElementById("detailsModal");
+const registrationModal = document.getElementById("registrationModal");
 
-    {
-        name: "Sports Day",
-        date: "25 October 2026",
-        location: "Sports Ground",
-        description:
-            "Enjoy an exciting day of sports, competitions and teamwork.",
-        status: "Registration Closed",
-        activities:
-            "Running, football, cricket, badminton and other sporting competitions.",
-        participants:
-            "College students who registered for the sports activities."
-    }
-];
+const registrationForm = document.getElementById("registrationForm");
+
+const selectedEventElement =
+    document.getElementById("selectedEvent");
+
+const detailsTitle =
+    document.getElementById("detailsTitle");
+
+const detailsDate =
+    document.getElementById("detailsDate");
+
+const detailsLocation =
+    document.getElementById("detailsLocation");
+
+const detailsStatus =
+    document.getElementById("detailsStatus");
+
+const detailsDescription =
+    document.getElementById("detailsDescription");
+
+const detailsActivities =
+    document.getElementById("detailsActivities");
+
+const detailsParticipants =
+    document.getElementById("detailsParticipants");
 
 
 /* =========================================
-   LOCAL STORAGE
-========================================= */
-
-let registrations =
-    JSON.parse(localStorage.getItem("registrations")) || [];
-
-let customEvents =
-    JSON.parse(localStorage.getItem("customEvents")) || [];
-
-
-/* =========================================
-   PAGE LOAD
+   START WEBSITE
 ========================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    displayRegistrations();
-
-    renderCustomEvents();
+    loadEvents();
 
     setupSearch();
 
     setupRegistrationForm();
 
-    setupAddEventForm();
-
 });
+
+
+/* =========================================
+   LOAD EVENTS FROM MYSQL
+========================================= */
+
+async function loadEvents() {
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/api/events`
+        );
+
+        if (!response.ok) {
+            throw new Error("Unable to load events.");
+        }
+
+        databaseEvents = await response.json();
+
+        renderEvents(databaseEvents);
+
+    } catch (error) {
+
+        console.error("Error loading events:", error);
+
+        eventContainer.innerHTML = `
+            <div class="event-error">
+                <h3>Unable to load events</h3>
+                <p>
+                    Please make sure the backend server
+                    is running at http://localhost:3000
+                </p>
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   RENDER EVENTS
+========================================= */
+
+function renderEvents(events) {
+
+    eventContainer.innerHTML = "";
+
+    if (events.length === 0) {
+
+        noSearchResults.style.display = "block";
+
+        return;
+    }
+
+    noSearchResults.style.display = "none";
+
+
+    events.forEach(function (event) {
+
+        const card = document.createElement("div");
+
+        card.className = "event-card";
+
+
+        const poster = getPoster(event.name);
+
+        const statusClass = getStatusClass(event.status);
+
+        const isClosed =
+            event.status &&
+            event.status.toLowerCase().includes("closed");
+
+
+        card.innerHTML = `
+
+            <img
+                src="${poster}"
+                alt="${escapeHTML(event.name)} poster"
+                class="event-poster"
+                onerror="this.src='https://via.placeholder.com/800x500?text=College+Event'"
+            >
+
+            <div class="event-info">
+
+                <h3>
+                    ${escapeHTML(event.name)}
+                </h3>
+
+
+                <div class="event-meta">
+
+                    <span>
+                        📅 ${formatDate(event.event_date)}
+                    </span>
+
+                    <span>
+                        📍 ${escapeHTML(event.location)}
+                    </span>
+
+                </div>
+
+
+                <p class="event-description">
+                    ${escapeHTML(
+                        event.description ||
+                        "Join this exciting college event."
+                    )}
+                </p>
+
+
+                <span class="status ${statusClass}">
+                    ${escapeHTML(event.status || "Registration Open")}
+                </span>
+
+
+                <div class="event-actions">
+
+                    <button
+                        class="view-btn"
+                        data-details-id="${event.id}"
+                    >
+                        View Details
+                    </button>
+
+
+                    <button
+                        class="register-btn"
+                        data-register-id="${event.id}"
+                        ${isClosed ? "disabled" : ""}
+                    >
+                        ${isClosed ? "Registration Closed" : "Register Now"}
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+
+        eventContainer.appendChild(card);
+
+    });
+
+
+    setupEventButtons();
+
+}
+
+
+/* =========================================
+   POSTER MAPPING
+========================================= */
+
+function getPoster(eventName) {
+
+    const name = eventName.toLowerCase();
+
+
+    if (name.includes("tech fest")) {
+        return "tech-fest-poster.png";
+    }
+
+
+    if (name.includes("cultural fest")) {
+        return "cultural-fest-poster.png";
+    }
+
+
+    if (name.includes("sports day")) {
+        return "sports-day-poster.png";
+    }
+
+
+    return "https://via.placeholder.com/800x500?text=College+Event";
+}
+
+
+/* =========================================
+   STATUS CLASS
+========================================= */
+
+function getStatusClass(status) {
+
+    if (!status) {
+        return "status-open";
+    }
+
+    const lowerStatus = status.toLowerCase();
+
+
+    if (lowerStatus.includes("closed")) {
+        return "status-closed";
+    }
+
+
+    if (
+        lowerStatus.includes("limited") ||
+        lowerStatus.includes("few")
+    ) {
+        return "status-limited";
+    }
+
+
+    return "status-open";
+}
+
+
+/* =========================================
+   EVENT BUTTONS
+========================================= */
+
+function setupEventButtons() {
+
+    const viewButtons =
+        document.querySelectorAll("[data-details-id]");
+
+    const registerButtons =
+        document.querySelectorAll("[data-register-id]");
+
+
+    viewButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const eventId =
+                Number(button.dataset.detailsId);
+
+            openDetailsModal(eventId);
+
+        });
+
+    });
+
+
+    registerButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            if (button.disabled) {
+                return;
+            }
+
+            const eventId =
+                Number(button.dataset.registerId);
+
+            openRegistrationModal(eventId);
+
+        });
+
+    });
+
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+function setupSearch() {
+
+    searchInput.addEventListener(
+        "input",
+        function () {
+
+            const searchText =
+                searchInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+            if (searchText === "") {
+
+                renderEvents(databaseEvents);
+
+                return;
+            }
+
+
+            const filteredEvents =
+                databaseEvents.filter(function (event) {
+
+                    const searchableText = `
+                        ${event.name || ""}
+                        ${event.location || ""}
+                        ${event.description || ""}
+                        ${event.status || ""}
+                    `.toLowerCase();
+
+
+                    return searchableText.includes(searchText);
+
+                });
+
+
+            renderEvents(filteredEvents);
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   EVENT DETAILS
+========================================= */
+
+function openDetailsModal(eventId) {
+
+    const event =
+        databaseEvents.find(function (item) {
+
+            return Number(item.id) === Number(eventId);
+
+        });
+
+
+    if (!event) {
+        return;
+    }
+
+
+    detailsTitle.textContent =
+        event.name || "Event Details";
+
+
+    detailsDate.textContent =
+        formatDate(event.event_date);
+
+
+    detailsLocation.textContent =
+        event.location || "Not specified";
+
+
+    detailsStatus.textContent =
+        event.status || "Registration Open";
+
+
+    detailsDescription.textContent =
+        event.description ||
+        "No description available.";
+
+
+    detailsActivities.textContent =
+        getActivities(event.name);
+
+
+    detailsParticipants.textContent =
+        "College students who meet the event requirements.";
+
+
+    detailsModal.classList.add("show");
+
+}
+
+
+function closeDetailsModal() {
+
+    detailsModal.classList.remove("show");
+
+}
+
+
+/* =========================================
+   EVENT ACTIVITIES
+========================================= */
+
+function getActivities(eventName) {
+
+    const name =
+        (eventName || "").toLowerCase();
+
+
+    if (name.includes("tech fest")) {
+
+        return "Technical competitions, technology activities, projects and other technical events.";
+
+    }
+
+
+    if (name.includes("cultural fest")) {
+
+        return "Dance, music, performances, cultural activities and creative programs.";
+
+    }
+
+
+    if (name.includes("sports day")) {
+
+        return "Sports competitions, athletic activities and different outdoor games.";
+
+    }
+
+
+    return "Activities will be announced by the event organizers.";
+
+}
 
 
 /* =========================================
    REGISTRATION MODAL
 ========================================= */
 
-let selectedEventName = "";
+function openRegistrationModal(eventId) {
 
-function openRegistration(eventName) {
+    const event =
+        databaseEvents.find(function (item) {
 
-    selectedEventName = eventName;
+            return Number(item.id) === Number(eventId);
 
-    document.getElementById("selectedEvent").textContent =
-        eventName;
+        });
 
-    document.getElementById("registrationModal")
-        .classList.add("active");
+
+    if (!event) {
+        return;
+    }
+
+
+    if (
+        event.status &&
+        event.status.toLowerCase().includes("closed")
+    ) {
+
+        alert("Registration for this event is closed.");
+
+        return;
+    }
+
+
+    selectedEventId =
+        Number(event.id);
+
+
+    selectedEventElement.textContent =
+        event.name;
+
+
+    registrationForm.reset();
+
+
+    registrationModal.classList.add("show");
+
 }
 
 
 function closeRegistrationModal() {
 
-    document.getElementById("registrationModal")
-        .classList.remove("active");
+    registrationModal.classList.remove("show");
 
-    document.getElementById("registrationForm").reset();
+    selectedEventId = null;
 
-    selectedEventName = "";
+}
+
+
+/* =========================================
+   REGISTRATION FORM
+========================================= */
+
+function setupRegistrationForm() {
+
+    registrationForm.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            if (!selectedEventId) {
+
+                alert("Please select an event.");
+
+                return;
+            }
+
+
+            const studentName =
+                document
+                    .getElementById("studentName")
+                    .value
+                    .trim();
+
+
+            const studentEmail =
+                document
+                    .getElementById("studentEmail")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+
+            const studentCourse =
+                document
+                    .getElementById("studentCourse")
+                    .value
+                    .trim();
+
+
+            if (
+                studentName === "" ||
+                studentEmail === "" ||
+                studentCourse === ""
+            ) {
+
+                alert("Please fill in all fields.");
+
+                return;
+            }
+
+
+            if (!isValidEmail(studentEmail)) {
+
+                alert("Please enter a valid email address.");
+
+                return;
+            }
+
+
+            const registrations =
+                getRegistrations();
+
+
+            const duplicate =
+                registrations.some(function (registration) {
+
+                    return (
+                        registration.email === studentEmail &&
+                        Number(registration.eventId) ===
+                            Number(selectedEventId)
+                    );
+
+                });
+
+
+            if (duplicate) {
+
+                alert(
+                    "You have already registered for this event with this email."
+                );
+
+                return;
+            }
+
+
+            const selectedEvent =
+                databaseEvents.find(function (item) {
+
+                    return Number(item.id) ===
+                        Number(selectedEventId);
+
+                });
+
+
+            if (!selectedEvent) {
+
+                alert("Event not found.");
+
+                return;
+            }
+
+
+            const newRegistration = {
+
+                id: Date.now(),
+
+                studentName: studentName,
+
+                email: studentEmail,
+
+                course: studentCourse,
+
+                eventId: Number(selectedEvent.id),
+
+                eventName: selectedEvent.name,
+
+                registeredAt:
+                    new Date().toISOString()
+
+            };
+
+
+            registrations.push(newRegistration);
+
+
+            localStorage.setItem(
+                "registrations",
+                JSON.stringify(registrations)
+            );
+
+
+            alert(
+                `Registration successful for ${selectedEvent.name}!`
+            );
+
+
+            closeRegistrationModal();
+
+        }
+    );
+
 }
 
 
@@ -123,709 +678,66 @@ function isValidEmail(email) {
 
 
 /* =========================================
-   REGISTRATION FORM
+   LOCAL STORAGE
 ========================================= */
 
-function setupRegistrationForm() {
+function getRegistrations() {
 
-    const form =
-        document.getElementById("registrationForm");
+    try {
 
-    form.addEventListener("submit", function (event) {
-
-        event.preventDefault();
+        const saved =
+            localStorage.getItem("registrations");
 
 
-        const name =
-            document.getElementById("studentName")
-                .value.trim();
-
-        const email =
-            document.getElementById("studentEmail")
-                .value.trim();
-
-        const course =
-            document.getElementById("studentCourse")
-                .value.trim();
-
-
-        /* Check empty fields */
-
-        if (!name || !email || !course) {
-
-            alert("Please fill in all fields.");
-
-            return;
+        if (!saved) {
+            return [];
         }
 
 
-        /* Check email format */
-
-        if (!isValidEmail(email)) {
-
-            alert(
-                "Please enter a valid email address."
-            );
-
-            document.getElementById("studentEmail").focus();
-
-            return;
-        }
+        const registrations =
+            JSON.parse(saved);
 
 
-        /* Check duplicate registration */
+        return Array.isArray(registrations)
+            ? registrations
+            : [];
 
-        const duplicate =
-            registrations.some(function (registration) {
+    } catch (error) {
 
-                return (
-                    registration.email.toLowerCase() ===
-                    email.toLowerCase() &&
-                    registration.event === selectedEventName
-                );
-
-            });
-
-
-        if (duplicate) {
-
-            alert(
-                "You have already registered for this event with this email."
-            );
-
-            return;
-        }
-
-
-        /* Add registration */
-
-        registrations.push({
-
-            name: name,
-
-            email: email,
-
-            course: course,
-
-            event: selectedEventName
-
-        });
-
-
-        localStorage.setItem(
-            "registrations",
-            JSON.stringify(registrations)
+        console.error(
+            "Error reading registrations:",
+            error
         );
 
-
-        alert(
-            "Registration successful for " +
-            selectedEventName +
-            "!"
-        );
-
-
-        displayRegistrations();
-
-        closeRegistrationModal();
-
-    });
-}
-
-
-/* =========================================
-   DISPLAY REGISTRATIONS
-========================================= */
-
-function displayRegistrations() {
-
-    const table =
-        document.getElementById("registrationTable");
-
-    const noRegistrations =
-        document.getElementById("noRegistrations");
-
-
-    table.innerHTML = "";
-
-
-    if (registrations.length === 0) {
-
-        noRegistrations.style.display = "block";
-
-        return;
+        return [];
 
     }
 
-
-    noRegistrations.style.display = "none";
-
-
-    registrations.forEach(function (registration, index) {
-
-        const row = document.createElement("tr");
-
-
-        row.innerHTML = `
-
-            <td>${escapeHTML(registration.name)}</td>
-
-            <td>${escapeHTML(registration.email)}</td>
-
-            <td>${escapeHTML(registration.course)}</td>
-
-            <td>${escapeHTML(registration.event)}</td>
-
-            <td>
-
-                <button
-                    class="edit-btn"
-                    onclick="editRegistration(${index})"
-                >
-                    Edit
-                </button>
-
-                <button
-                    class="delete-btn"
-                    onclick="deleteRegistration(${index})"
-                >
-                    Delete
-                </button>
-
-            </td>
-
-        `;
-
-
-        table.appendChild(row);
-
-    });
-
 }
 
 
 /* =========================================
-   EDIT REGISTRATION
+   DATE FORMAT
 ========================================= */
 
-function editRegistration(index) {
+function formatDate(dateValue) {
 
-    const registration = registrations[index];
-
-
-    const newName = prompt(
-        "Enter student name:",
-        registration.name
-    );
-
-    if (newName === null) {
-        return;
-    }
-
-
-    const newEmail = prompt(
-        "Enter email:",
-        registration.email
-    );
-
-    if (newEmail === null) {
-        return;
-    }
-
-
-    /* Validate edited email */
-
-    if (!isValidEmail(newEmail.trim())) {
-
-        alert(
-            "Please enter a valid email address."
-        );
-
-        return;
-    }
-
-
-    const newCourse = prompt(
-        "Enter course:",
-        registration.course
-    );
-
-    if (newCourse === null) {
-        return;
-    }
-
-
-    registrations[index].name =
-        newName.trim();
-
-    registrations[index].email =
-        newEmail.trim();
-
-    registrations[index].course =
-        newCourse.trim();
-
-
-    localStorage.setItem(
-        "registrations",
-        JSON.stringify(registrations)
-    );
-
-
-    displayRegistrations();
-
-    alert("Registration updated successfully.");
-
-}
-
-
-/* =========================================
-   DELETE REGISTRATION
-========================================= */
-
-function deleteRegistration(index) {
-
-    const confirmation =
-        confirm(
-            "Are you sure you want to delete this registration?"
-        );
-
-
-    if (!confirmation) {
-        return;
-    }
-
-
-    registrations.splice(index, 1);
-
-
-    localStorage.setItem(
-        "registrations",
-        JSON.stringify(registrations)
-    );
-
-
-    displayRegistrations();
-
-}
-
-
-/* =========================================
-   EVENT DETAILS
-========================================= */
-
-function showEventDetails(eventName) {
-
-    const event = findEvent(eventName);
-
-
-    if (!event) {
-
-        alert("Event details not found.");
-
-        return;
-    }
-
-
-    document.getElementById("detailsTitle").textContent =
-        event.name;
-
-    document.getElementById("detailsDate").textContent =
-        event.date;
-
-    document.getElementById("detailsLocation").textContent =
-        event.location;
-
-    document.getElementById("detailsStatus").textContent =
-        event.status;
-
-    document.getElementById("detailsDescription").textContent =
-        event.description;
-
-    document.getElementById("detailsActivities").textContent =
-        event.activities;
-
-    document.getElementById("detailsParticipants").textContent =
-        event.participants;
-
-
-    document.getElementById("detailsModal")
-        .classList.add("active");
-
-}
-
-
-function closeDetailsModal() {
-
-    document.getElementById("detailsModal")
-        .classList.remove("active");
-
-}
-
-
-/* =========================================
-   FIND EVENT
-========================================= */
-
-function findEvent(eventName) {
-
-    const defaultEvent =
-        defaultEvents.find(function (event) {
-
-            return event.name === eventName;
-
-        });
-
-
-    if (defaultEvent) {
-        return defaultEvent;
-    }
-
-
-    const customEvent =
-        customEvents.find(function (event) {
-
-            return event.name === eventName;
-
-        });
-
-
-    if (customEvent) {
-
-        return {
-
-            name: customEvent.name,
-
-            date: formatDate(customEvent.date),
-
-            location: customEvent.location,
-
-            description: customEvent.description,
-
-            status: "Registration Open",
-
-            activities:
-                "Activities and details will be announced by the event organizers.",
-
-            participants:
-                "All eligible college students can participate."
-
-        };
-
-    }
-
-
-    return null;
-}
-
-
-/* =========================================
-   SEARCH EVENTS
-========================================= */
-
-function setupSearch() {
-
-    const searchInput =
-        document.getElementById("searchInput");
-
-
-    searchInput.addEventListener("input", function () {
-
-        const searchText =
-            searchInput.value.toLowerCase().trim();
-
-
-        const cards =
-            document.querySelectorAll(".event-card");
-
-
-        cards.forEach(function (card) {
-
-            const title =
-                card.querySelector("h3");
-
-
-            if (!title) {
-                return;
-            }
-
-
-            const eventName =
-                title.textContent.toLowerCase();
-
-
-            if (eventName.includes(searchText)) {
-
-                card.style.display = "";
-
-            } else {
-
-                card.style.display = "none";
-
-            }
-
-        });
-
-    });
-
-}
-
-
-/* =========================================
-   ADD EVENT MODAL
-========================================= */
-
-function openAddEventModal() {
-
-    document.getElementById("addEventModal")
-        .classList.add("active");
-
-}
-
-
-function closeAddEventModal() {
-
-    document.getElementById("addEventModal")
-        .classList.remove("active");
-
-    document.getElementById("addEventForm").reset();
-
-}
-
-
-/* =========================================
-   ADD EVENT FORM
-========================================= */
-
-function setupAddEventForm() {
-
-    const form =
-        document.getElementById("addEventForm");
-
-
-    form.addEventListener("submit", function (event) {
-
-        event.preventDefault();
-
-
-        const name =
-            document.getElementById("newEventName")
-                .value.trim();
-
-        const date =
-            document.getElementById("newEventDate")
-                .value;
-
-        const location =
-            document.getElementById("newEventLocation")
-                .value.trim();
-
-        const description =
-            document.getElementById("newEventDescription")
-                .value.trim();
-
-
-        if (!name || !date || !location || !description) {
-
-            alert("Please fill in all fields.");
-
-            return;
-        }
-
-
-        /* Prevent duplicate event names */
-
-        const exists =
-            defaultEvents.some(function (event) {
-
-                return event.name.toLowerCase() ===
-                    name.toLowerCase();
-
-            }) ||
-
-            customEvents.some(function (event) {
-
-                return event.name.toLowerCase() ===
-                    name.toLowerCase();
-
-            });
-
-
-        if (exists) {
-
-            alert(
-                "An event with this name already exists."
-            );
-
-            return;
-        }
-
-
-        const newEvent = {
-
-            name: name,
-
-            date: date,
-
-            location: location,
-
-            description: description
-
-        };
-
-
-        customEvents.push(newEvent);
-
-
-        localStorage.setItem(
-            "customEvents",
-            JSON.stringify(customEvents)
-        );
-
-
-        renderCustomEvents();
-
-
-        closeAddEventModal();
-
-
-        alert(
-            "New event added successfully!"
-        );
-
-    });
-
-}
-
-
-/* =========================================
-   RENDER CUSTOM EVENTS
-========================================= */
-
-function renderCustomEvents() {
-
-    const container =
-        document.getElementById("eventContainer");
-
-
-    document
-        .querySelectorAll(".custom-event")
-        .forEach(function (card) {
-
-            card.remove();
-
-        });
-
-
-    customEvents.forEach(function (event) {
-
-        const card =
-            document.createElement("div");
-
-
-        card.className =
-            "event-card custom-event";
-
-
-        card.innerHTML = `
-
-            <div class="event-poster">
-
-                <div class="custom-poster-content">
-
-                    <span>📅</span>
-
-                    <strong>
-                        ${escapeHTML(event.name)}
-                    </strong>
-
-                    <small>
-                        COLLEGE EVENT
-                    </small>
-
-                </div>
-
-            </div>
-
-
-            <div class="event-icon">
-                📅
-            </div>
-
-
-            <div class="event-content">
-
-                <div class="event-status open">
-                    🟢 Registration Open
-                </div>
-
-
-                <h3>
-                    ${escapeHTML(event.name)}
-                </h3>
-
-
-                <p class="event-info">
-                    📅 ${escapeHTML(formatDate(event.date))}
-                </p>
-
-
-                <p class="event-info">
-                    📍 ${escapeHTML(event.location)}
-                </p>
-
-
-                <p>
-                    ${escapeHTML(event.description)}
-                </p>
-
-
-                <div class="event-actions">
-
-                    <button
-                        class="details-btn"
-                        onclick="showEventDetails('${escapeAttribute(event.name)}')"
-                    >
-                        View Details
-                    </button>
-
-
-                    <button
-                        class="register-btn"
-                        onclick="openRegistration('${escapeAttribute(event.name)}')"
-                    >
-                        Register Now
-                    </button>
-
-                </div>
-
-            </div>
-        `;
-
-
-        container.appendChild(card);
-
-    });
-
-}
-
-
-/* =========================================
-   FORMAT DATE
-========================================= */
-
-function formatDate(dateString) {
-
-    if (!dateString) {
-        return "";
+    if (!dateValue) {
+        return "Date not available";
     }
 
 
     const date =
-        new Date(dateString + "T00:00:00");
+        new Date(dateValue);
+
+
+    if (isNaN(date.getTime())) {
+        return dateValue;
+    }
 
 
     return date.toLocaleDateString(
-        "en-GB",
+        "en-IN",
         {
             day: "numeric",
             month: "long",
@@ -837,58 +749,62 @@ function formatDate(dateString) {
 
 
 /* =========================================
-   ESCAPE HTML
+   HTML ESCAPE
 ========================================= */
 
 function escapeHTML(value) {
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    const div =
+        document.createElement("div");
 
-}
+    div.textContent =
+        value ?? "";
 
-
-function escapeAttribute(value) {
-
-    return String(value)
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'");
+    return div.innerHTML;
 
 }
 
 
 /* =========================================
-   CLOSE MODALS OUTSIDE CLICK
+   CLOSE MODALS WHEN CLICKING OUTSIDE
 ========================================= */
 
-window.addEventListener("click", function (event) {
+window.addEventListener(
+    "click",
+    function (event) {
 
-    const detailsModal =
-        document.getElementById("detailsModal");
+        if (event.target === detailsModal) {
 
-    const registrationModal =
-        document.getElementById("registrationModal");
+            closeDetailsModal();
 
-    const addEventModal =
-        document.getElementById("addEventModal");
+        }
 
 
-    if (event.target === detailsModal) {
-        closeDetailsModal();
+        if (event.target === registrationModal) {
+
+            closeRegistrationModal();
+
+        }
+
     }
+);
 
 
-    if (event.target === registrationModal) {
-        closeRegistrationModal();
+/* =========================================
+   ESC KEY CLOSES MODALS
+========================================= */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Escape") {
+
+            closeDetailsModal();
+
+            closeRegistrationModal();
+
+        }
+
     }
-
-
-    if (event.target === addEventModal) {
-        closeAddEventModal();
-    }
-
-});
+);
